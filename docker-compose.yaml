@@ -11,7 +11,7 @@ services:
       - USERS_API_URL=https://nautilus.casinovip365.com/users/v1
       - WALLET_API_URL=https://nautilus.casinovip365.com/wallet/v1
     ports:
-      - 8080:80
+      - 8081:80
     networks:
       - operator-admin-services_wlso.backend
 networks:
