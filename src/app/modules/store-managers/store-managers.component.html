@@ -1,0 +1,21 @@
+<app-title title="Administradores de Tiendas"></app-title>
+
+<mat-card>
+  <app-table-multifilter
+    [tableId]="config.dataTable.tableId"
+    [columns]="config.dataTable.columns"
+    [pageSizeOptions]="config.dataTable.pageSizeOptions"
+    [pageSize]="config.dataTable.pageSizeDefault"
+    [actions]="config.dataTable.actionColumn"
+    [index]="config.dataTable.indexColumn"
+    [filters]="filtersAllowed"
+    [showFilters]="config.dataTable.showFilters"
+    [showBtnReload]="config.dataTable.showBtnReload"
+    [showBtnDownload]="config.dataTable.showBtnDownload"
+    [showBtnAdd]="config.dataTable.showBtnAdd"
+    [showChooseColumns]="config.dataTable.showChooseColumns"
+    (clicBtn)="handleAction($event)"
+    (runFilter)="handleFilter($event)"
+    (newRegister)="handleNew($event)"
+  ></app-table-multifilter>
+</mat-card>

@@ -1,0 +1,103 @@
+<div class="container">
+	<div class="row animate__animated animate__fadeInUp">
+		<div class="col-12">
+			<form [formGroup]="form">
+				<mat-card>
+					<div class="row">
+						<div class="col-12">
+							<h3>
+								{{
+									pageType == "new"
+										? "Registrar "
+										: "Actualizar "
+								}}
+								Perfil
+							</h3>
+						</div>
+
+						<app-form-field-input
+							class="col-12"
+							appearance="outline"
+							formControlName="firstName"
+							[type]="'text'"
+							label="Nombre *"
+							[error]="form.controls['firstName']"
+						>
+						</app-form-field-input>
+
+						<app-form-field-input
+							class="col-12"
+							appearance="outline"
+							formControlName="lastName"
+							[type]="'text'"
+							label="Apellidos *"
+							[error]="form.controls['lastName']"
+						>
+						</app-form-field-input>
+
+						<app-form-field-input
+							class="col-12"
+							appearance="outline"
+							formControlName="email"
+							[type]="'text'"
+							label="E-mail *"
+							[error]="form.controls['email']"
+						>
+						</app-form-field-input>
+
+						<app-form-field-select
+							class="col-12"
+							appearance="outline"
+							formControlName="storeId"
+							label="Tienda asignada"
+							[options]="stores"
+							[display]="'name'"
+							[key]="'storeId'"
+							[error]="form.controls['storeId']"
+						></app-form-field-select>
+
+						<app-form-field-select
+							class="col-12"
+							appearance="outline"
+							formControlName="profileId"
+							label="Perfiles"
+							[options]="profiles"
+							[display]="'name'"
+							[key]="'profileId'"
+							[error]="form.controls['profileId']"
+						></app-form-field-select>
+
+						<div class="col-12">
+							<div class="d-flex buttons-submit">
+								<button
+									(click)="handleCancel()"
+									mat-stroked-button
+									color="warn"
+								>
+									CANCELAR
+								</button>
+								<button
+									(click)="
+										pageType == 'new'
+											? handleNewItem()
+											: handleUpdItem()
+									"
+									#submit
+									[disabled]="!form.valid"
+									mat-raised-button
+									color="primary"
+								>
+									{{
+										pageType == "new"
+											? "REGISTRAR"
+											: "ACTUALIZAR"
+									}}
+								</button>
+							</div>
+						</div>
+					</div>
+				</mat-card>
+			</form>
+		</div>
+	</div>
+</div>

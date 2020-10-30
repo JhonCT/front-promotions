@@ -1,0 +1,88 @@
+
+<div class="table__wrapper mat-elevation-z8">
+
+	<div class="table__headers">
+
+		<div class="table__headers__filter">
+
+			<app-multi-filter [allFilters]="filters" (runFilter)="handleFilter($event)" *ngIf="showFilters"></app-multi-filter>
+
+		</div>
+
+		<div class="table__headers__buttons" *ngIf="showBtnReload || showBtnDownload || showBtnAdd">
+			<button mat-icon-button color="primary" class="mx-1" (click)="handleRefresh()" *ngIf="showBtnReload">
+				<mat-icon>replay</mat-icon>
+			</button>
+			<button mat-icon-button color="primary" class="mx-1" (click)="exportToCsv()" *ngIf="showBtnDownload">
+				<mat-icon>get_app</mat-icon>
+			</button>
+			<button mat-stroked-button color="primary" class="mx-1" (click)="handleNew()" *ngIf="showBtnAdd">
+				<mat-icon>add</mat-icon>
+				Agregar
+			</button>
+		</div>
+	</div>
+
+	<div class="row px-3" *ngIf="showBtnReload || showBtnDownload || showBtnAdd">
+		<div class="col-12">
+			<mat-divider></mat-divider>
+		</div>
+	</div>
+
+	<div class="table__container">
+		<table mat-table [dataSource]="dataSource">
+
+			<!-- index Column -->
+			<ng-container matColumnDef="index">
+				<th mat-header-cell *matHeaderCellDef> # </th>
+				<td mat-cell *matCellDef="let row; let nro = index"> {{ nro + 1 }} </td>
+			</ng-container>
+
+			<!-- Position Column -->
+			<ng-container [matColumnDef]="item.key" *ngFor="let item of columns">
+				<th mat-header-cell *matHeaderCellDef [ngStyle]="{'text-align': item.align}" [style.min-width.px]="item.width ? item.width : 120">{{ item.header }}</th>
+				<td mat-cell *matCellDef="let row" [ngStyle]="{'text-align': item.align}">{{ row[item.key] }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef> ACCIONES </th>
+				<td mat-cell *matCellDef="let row; let i = index">
+					<ng-container *ngFor="let action of row.actions">
+						<button mat-icon-button (click)="handleAction( action, row )" [matTooltip]="action.label" [matTooltipPosition]="'left'" *ngIf="action.show">
+							<mat-icon [ngStyle]="{'color': action.color }">{{ action.icon }}</mat-icon>
+						</button>
+					</ng-container>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+		</table>
+	</div>
+	<div class="table__footer">
+
+		<div class="table__footer__options" *ngIf="showChooseColumns">
+
+			<mat-form-field appearance="outline">
+				<mat-label>Columnas</mat-label>
+				<mat-select (selectionChange)="chooseColumns($event.value)" multiple [formControl]="columnsSelected">
+					<mat-select-trigger>
+						{{displayedColumns.length}} {{displayedColumns.length > 1 ? 'columnas seleccionadas' : 'columna seleccionada'}}
+					</mat-select-trigger>
+					<mat-option *ngIf="index" value="index"> # </mat-option>
+					<mat-option *ngFor="let item of columns" [value]="item.key">{{item.header}}</mat-option>
+					<mat-option *ngIf="actions" value="actions"> ACCIONES </mat-option>
+				</mat-select>
+			</mat-form-field>
+
+		</div>
+		<div class="table__footer__paginator">
+
+			<mat-paginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons>
+			</mat-paginator>
+
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,68 @@
+<app-title title="Reporte In/Out"></app-title>
+<mat-card>
+  <form [formGroup]="form">
+    <div class="row">
+      <app-form-field-select
+        class="col-4"
+        appearance="outline"
+        formControlName="storeId"
+        label="Tienda"
+        [options]="stores"
+        [display]="'name'"
+        [key]="'storeId'"
+        [error]="form.controls['storeId']"
+      ></app-form-field-select>
+      <app-form-field-input
+        class="col-4"
+        appearance="outline"
+        formControlName="dateStart"
+        [type]="'text'"
+        placeholder="dd/mm/yyyy"
+        mask="00/00/0000"
+        [dropSpecialCharacters]="false"
+        label="Desde *"
+        [error]="form.controls['dateStart']"
+      >
+      </app-form-field-input>
+      <app-form-field-input
+        class="col-4"
+        appearance="outline"
+        formControlName="dateEnd"
+        placeholder="dd/mm/yyyy"
+        [type]="'text'"
+        mask="00/00/0000"
+        [dropSpecialCharacters]="false"
+        label="Hasta *"
+        [error]="form.controls['dateEnd']"
+      >
+      </app-form-field-input>
+      <div class="col-12 d-flex justify-content-end">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onClickBuscar()"
+          [disabled]="!form.valid"
+        >
+          BUSCAR
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-card>
+<br>
+<mat-card>
+	<app-table-multifilter
+	  [tableId]="config.dataTable.tableId"
+	  [columns]="config.dataTable.columns"
+	  [pageSizeOptions]="config.dataTable.pageSizeOptions"
+	  [pageSize]="config.dataTable.pageSizeDefault"
+	  [actions]="config.dataTable.actionColumn"
+	  [index]="config.dataTable.indexColumn"
+	  [filters]="[]"
+	  [showFilters]="config.dataTable.showFilters"
+	  [showBtnReload]="config.dataTable.showBtnReload"
+	  [showBtnDownload]="config.dataTable.showBtnDownload"
+	  [showBtnAdd]="config.dataTable.showBtnAdd"
+	  [showChooseColumns]="config.dataTable.showChooseColumns"
+	></app-table-multifilter>
+  </mat-card>

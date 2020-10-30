@@ -1,0 +1,73 @@
+<div class="container">
+	<div class="row animate__animated animate__fadeInUp">
+		<div class="col-12">
+			<form [formGroup]="form">
+				<mat-card>
+					<div class="row">
+						<div class="col-12">
+							<div class="tittle">
+								{{
+									pageType == "new"
+										? "Registrar "
+										: "Actualizar "
+								}}
+								Administrador de tiendas
+							</div>
+						</div>
+
+						<app-form-field-select
+							class="col-12"
+							appearance="outline"
+							formControlName="userId"
+							label="Usuario"
+							[options]="users"
+							[display]="'names'"
+							[key]="'userId'"
+							[error]="form.controls['userId']"
+						></app-form-field-select>
+
+						<app-form-field-select
+							class="col-12"
+							appearance="outline"
+							formControlName="storeId"
+							label="Tienda a asignar"
+							[options]="stores"
+							[display]="'name'"
+							[key]="'storeId'"
+							[error]="form.controls['storeId']"
+						></app-form-field-select>
+
+						<div class="col-12">
+							<div class="d-flex buttons-submit">
+								<button
+									(click)="handleCancel()"
+									mat-stroked-button
+									color="warn"
+								>
+									CANCELAR
+								</button>
+								<button
+									(click)="
+										pageType == 'new'
+											? handleNewItem()
+											: handleUpdItem()
+									"
+									#submit
+									[disabled]="!form.valid"
+									mat-raised-button
+									color="primary"
+								>
+									{{
+										pageType == "new"
+											? "REGISTRAR"
+											: "ACTUALIZAR"
+									}}
+								</button>
+							</div>
+						</div>
+					</div>
+				</mat-card>
+			</form>
+		</div>
+	</div>
+</div>
