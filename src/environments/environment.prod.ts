@@ -1,3 +1,7 @@
 export const environment = {
-  production: true
+  production: true,
+  SECURITY_API_URL: 'ENV_SECURITY_API_URL',
+  PLAYERS_API_URL: 'ENV_PLAYERS_API_URL',
+  USERS_API_URL: 'ENV_USERS_API_URL',
+  WALLET_API_URL: 'ENV_WALLET_API_URL',
 };

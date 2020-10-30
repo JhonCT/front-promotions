@@ -1,0 +1,19 @@
+version: "2.1"
+services:
+  wlso.dev.operator.admin.app.no.wl:
+    image: wlso.operator.admin.app.no.wl:0.0.1
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - SECURITY_API_URL=https://nautilus.casinovip365.com/security-admin/v1
+      - PLAYERS_API_URL=https://nautilus.casinovip365.com/players/v1
+      - USERS_API_URL=https://nautilus.casinovip365.com/users/v1
+      - WALLET_API_URL=https://nautilus.casinovip365.com/wallet/v1
+    ports:
+      - 8080:80
+    networks:
+      - operator-admin-services_wlso.backend
+networks:
+  operator-admin-services_wlso.backend:
+    external: true
