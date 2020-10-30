@@ -6,10 +6,10 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      - SECURITY_API_URL=https://nautilus.casinovip365.com/security-admin/v1
-      - PLAYERS_API_URL=https://nautilus.casinovip365.com/players/v1
-      - USERS_API_URL=https://nautilus.casinovip365.com/users/v1
-      - WALLET_API_URL=https://nautilus.casinovip365.com/wallet/v1
+      - ENV_SECURITY_API_URL=https://nautilus.casinovip365.com/security-admin/v1
+      - ENV_PLAYERS_API_URL=https://nautilus.casinovip365.com/players/v1
+      - ENV_USERS_API_URL=https://nautilus.casinovip365.com/users/v1
+      - ENV_WALLET_API_URL=https://nautilus.casinovip365.com/wallet/v1
     ports:
       - 8081:80
     networks:
