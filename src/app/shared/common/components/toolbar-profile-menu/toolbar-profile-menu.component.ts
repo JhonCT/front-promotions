@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../../../../modules/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChangePasswordComponent } from '../change-password/change-password.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-toolbar-profile-menu',
@@ -18,6 +19,7 @@ export class ToolbarProfileMenuComponent implements OnInit {
   constructor(
     private authSvc: AuthService,
     public dialog: MatDialog,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {

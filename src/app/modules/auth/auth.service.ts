@@ -3,7 +3,8 @@ import { HttpClientService } from '../../shared/common/services/http-client.serv
 import { Router } from '@angular/router';
 import { ApiNames } from '../../config/apis.enum';
 import { SessionService } from './session.service';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,10 @@ export class AuthService {
         this.sessionSvc.logout();
         return res;
       }),
+      catchError((err) => {
+        this.sessionSvc.logout();
+        return throwError(err.error);
+      })
     );
   }
 
