@@ -15,6 +15,8 @@ export class MainComponent implements OnInit {
   sideNavOpened = true;
   menuGroups = [];
   storeLabel = 'Tienda: ';
+  firstName = '';
+  lastName = '';
 
   constructor(
     private mainSvc: MainService,
@@ -27,6 +29,8 @@ export class MainComponent implements OnInit {
     console.log('|session|asdasd', session);
     const menu = this.lsSVc.getItem('XMnAUl', true);
     this.storeLabel = `Tienda: ${session.storeName}`;
+    this.firstName = session.firstName;
+    this.lastName = session.lastName;
     if(menu) {
       this.menuGroups = menu;
       return menu;

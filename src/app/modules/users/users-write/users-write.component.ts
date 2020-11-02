@@ -112,7 +112,7 @@ export class UsersWriteComponent implements OnInit {
         body: data,
       })
       .subscribe((result: any) => {
-        this.toast.success({ message: `La contraseña del nuevo usuario es: ${result.data.item.passText}`, duration: 10 });
+        this.toast.success({ message: `La contraseña del nuevo usuario es: ${result.data.item.passText}`, duration: 20 });
         this.router.navigate(['/users']);
       });
   }

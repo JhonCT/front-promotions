@@ -50,9 +50,11 @@ import { AtomsFormFieldModule } from '../../shared/core/components/atoms/atoms-f
     ReactiveFormsModule,
     AtomsFormFieldModule,
     ToastrModule.forRoot({
+      closeButton: true,
       maxOpened: 1,
-      autoDismiss: true,
+      autoDismiss: false,
       preventDuplicates: true,
+      tapToDismiss: false,
     }),
   ],
   exports: [TitleComponent, LogoComponent, RouterOutletTabComponent, MoneyPipe],

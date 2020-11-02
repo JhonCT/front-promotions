@@ -45,6 +45,7 @@ export class SessionService {
 
   clearSession(): void {
     this.lsSvc.remove('xDolYs');
+    this.lsSvc.remove('XMnAUl');
     this.loggedIn = false;
     this.router.navigate(['/auth/login']);
   }

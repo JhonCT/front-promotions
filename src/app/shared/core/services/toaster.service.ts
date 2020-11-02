@@ -46,9 +46,9 @@ export class ToasterService {
       progressBar: true,
       enableHtml: true,
       progressAnimation: 'increasing',
-      autoDismiss: true,
-      closeButton: false,
-      tapToDismiss: true,
+      autoDismiss: false,
+      closeButton: true,
+      tapToDismiss: false,
       extendedTimeOut: 20000,
       positionClass: 'toast-bottom-right',
     });
