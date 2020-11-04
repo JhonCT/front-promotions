@@ -21,7 +21,7 @@
 						name
 						*ngIf="menuGroupListOpened"
 					>
-					Virtual Padlock
+					<span class="toolbar__logo">CASINO VIP 365</span>
 					</span>
 				</mat-toolbar>
 				<mat-divider></mat-divider>
@@ -38,7 +38,7 @@
 			<!-- links -->
 			<ng-container sidenav__links__items>
 				<mat-divider></mat-divider>
-				<app-side-nav-menu-item
+				<app-side-nav-menu-item-primary
 					[item]="{
 						icon: 'store',
 						link: '#',
@@ -46,7 +46,7 @@
 					}"
 					[extenalLink]="false"
 					[menuGroupListOpened]="menuGroupListOpened"
-				></app-side-nav-menu-item>
+				></app-side-nav-menu-item-primary>
 
 				<!-- <mat-divider></mat-divider>
 				<app-side-nav-menu-item
@@ -109,14 +109,14 @@
 						<app-toolbar-profile-icon
 							[matMenuTriggerFor]="menu"
 							[imgsrc]="''"
-							[firstname]="'U'"
+							[firstname]="fullName"
 						></app-toolbar-profile-icon>
 						<mat-menu #menu="matMenu">
 							<app-toolbar-profile-menu
 								[imgsrc]="''"
-								[fullName]="firstName + '' + lastName"
-								[email]="'usuario@gmail.com'"
-								[profile]="'perfil'"
+								[fullName]="fullName"
+								[email]="email"
+								[profile]="profile"
 							>
 							</app-toolbar-profile-menu>
 						</mat-menu>

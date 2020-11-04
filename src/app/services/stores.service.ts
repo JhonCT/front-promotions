@@ -21,7 +21,7 @@ export class StoresService {
       nameAPI: ApiNames.security,
       urlOrPath: `/${this.SUBJECT}`,
       headers,
-      loadingOverlay: true,
+      loadingOverlay: false,
       addCredentials: true,
     });
   }

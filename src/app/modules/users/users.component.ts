@@ -1,3 +1,4 @@
+import { AfterViewInit } from '@angular/core';
 import { filter, switchMap } from 'rxjs/operators';
 import { ConfirmDialogService } from './../../shared/common/components/confirm-dialog/confirm-dialog.service';
 import { UsersService } from './users.service';
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, AfterViewInit {
 
   config = userTableConfig;
   user: IUser[] = [];
@@ -33,6 +34,9 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.items();
+  }
+
+  ngAfterViewInit() {
   }
 
   items() {
@@ -122,7 +126,7 @@ export class UsersComponent implements OnInit {
 
   handleResetPassword(item: IUser): void {
     this.confirmSvc
-      .confirm({msg: `Esta a punto de resetear el password (${item.email}). ¿Proceder?`})
+      .confirm({msg: `Esta a punto de resetear la contraseña (${item.email}). ¿Proceder?`})
       .pipe(
         filter((confirm) => confirm),
         switchMap(() => {
@@ -132,7 +136,16 @@ export class UsersComponent implements OnInit {
       .subscribe({
         next: (result) => {
           this.items();
-          this.toast.success({ message: `La contraseña nueva de ${item.email} es: ${result.data.item.passText}`, duration: 10 });
+          this.confirmSvc
+          .confirm({
+            msg: `
+              Se ha reseteado la contraseña exitosamente: \n
+              <span class="usercreated__label"> Contraseña generada : </span> <span class="usercreated__value"> ${ result.data.item.passText } </span>
+              Nota: copie la contraseña
+            `,
+            btnCancel: 'CERRAR',
+            btnConfirm: 'ACEPTAR' })
+          .subscribe();
         },
         error: (err) => {
           this.toast.error( { message: err['kindMessage'] } );

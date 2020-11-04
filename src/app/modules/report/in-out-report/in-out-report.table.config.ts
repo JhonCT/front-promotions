@@ -17,6 +17,7 @@ export const InOutReportTableConfig = {
       { header: 'Email | cliente', align: 'left', key: 'customerEmail', width: '120', show: false },
       { header: 'Balance | Antes', align: 'right', key: 'coinsBefore', width: '100', show: true },
       { header: 'Balance | Despues', align: 'right', key: 'coins', width: '100', show: true },
+      { header: 'ID de la tienda', align: 'left', key: 'storeId', width: '100', show: true },
       { header: 'Usuario |  BO', align: 'left', key: 'userNames', width: '100', show: false },
       { header: 'Estado', align: 'left', key: 'status', width: '80', show: false },
       { header: 'Fecha', align: 'left', key: 'insDatetime', width: '100', show: true },

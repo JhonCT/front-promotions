@@ -1,23 +1,11 @@
-.title {
-  text-align: center;
-  font-size: 24px;
-  margin: 15px 0px;
-}
-
-.balance {
-  font-size: 28px;
-  font-weight: 500;
-  // margin: 10px 0px;
-}
-
-.customer-info {
-  margin: 10px 0px;
-  background-color: #1a1e21;
-  padding: 5px 1px;
+::ng-deep .usercreated__label {
   display: flex;
+  justify-content: center;
+  font-size: 16px;
+  margin: 13px 0px 2px;
 }
 
-::ng-deep .confirm__add__balance__player {
+::ng-deep .usercreated__value {
   display: flex;
   justify-content: center;
   font-size: 24px;

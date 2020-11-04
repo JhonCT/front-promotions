@@ -49,6 +49,7 @@ export const userTableConfig = {
       { header: 'Nombres', align: 'left', key: 'firstName', width: '120', show: true },
       { header: 'Apellidos', align: 'left', key: 'lastName', width: '120', show: true },
       { header: 'Correo', align: 'left', key: 'email', width: '100', show: true },
+      { header: 'ID de la tienda', align: 'left', key: 'storeId', width: '100', show: true },
       { header: 'Estado', align: 'left', key: 'active', width: '80', show: true },
       { header: 'Creado en', align: 'left', key: 'insDatetime', width: '100', show: true },
     ],

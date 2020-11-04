@@ -9,10 +9,10 @@ const routes: Routes = [
     path: '',
     component: PlayersComponent
   },
-  // {
-  //   path: 'write/:id',
-  //   component: PlayersWriteComponent
-  // },
+  {
+    path: 'write/:id',
+    component: PlayersWriteComponent
+  },
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

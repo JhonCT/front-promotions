@@ -9,11 +9,12 @@ import { User } from '../users.interface';
 import { MyValidator } from '@core/components/atoms/atoms-form-field/control-error/my-validator';
 import { ToasterService } from '@core/services/toaster.service';
 import { StoresService } from 'app/services/stores.service';
+import { ConfirmDialogService } from '@common/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-users-write',
   templateUrl: './users-write.component.html',
-  styleUrls: ['./users-write.component.scss']
+  styleUrls: ['./users-write.component.scss'],
 })
 export class UsersWriteComponent implements OnInit {
   id = '';
@@ -23,6 +24,7 @@ export class UsersWriteComponent implements OnInit {
   form: FormGroup;
   profiles = [];
   stores = [];
+  showStore = false;
   constructor(
     public activatedRoute: ActivatedRoute,
     private router: Router,
@@ -31,7 +33,8 @@ export class UsersWriteComponent implements OnInit {
     private profileSvc: ProfileService,
     private storeSvc: StoresService,
     private toast: ToasterService,
-  ) { }
+    private confirmSvc: ConfirmDialogService
+  ) {}
 
   routeparam({ key }) {
     return this.activatedRoute.params.pipe(
@@ -89,6 +92,9 @@ export class UsersWriteComponent implements OnInit {
         })
       )
       .subscribe((user: IUser) => {
+        if (['SELLER'].includes(user.profileId)) {
+          this.showStore = true;
+        }
         this.form = this.createForm(new User(user));
       });
   }
@@ -99,7 +105,7 @@ export class UsersWriteComponent implements OnInit {
       firstName: [model.firstName, Validators.compose([MyValidator.required, MyValidator.minLength(4)])],
       lastName: [model.lastName, Validators.compose([MyValidator.required, MyValidator.minLength(4)])],
       profileId: [model.profileId, Validators.compose([MyValidator.required])],
-      storeId: [model.storeId, Validators.compose([MyValidator.required])],
+      storeId: [model.storeId, Validators.compose([])],
     });
   }
 
@@ -107,13 +113,35 @@ export class UsersWriteComponent implements OnInit {
     if (!this.form.valid) return;
     const data = this.form.value;
     data.username = data.email;
+    if (['SELLER'].includes(data.profileId) && !data.storeId) {
+      this.toast.error({ message: `Elija una tienda para el usuario` });
+      return;
+    }
     this.svc
       .newItem({
         body: data,
       })
       .subscribe((result: any) => {
-        this.toast.success({ message: `La contraseña del nuevo usuario es: ${result.data.item.passText}`, duration: 20 });
-        this.router.navigate(['/users']);
+        const user = result.data.item;
+        this.confirmSvc
+          .confirm({
+            msg: `
+              El siguiente usuario ha sido creado exitosamente: \n
+              <span class="usercreated__label"> Username: </span> <span class="usercreated__value"> ${user.email} </span>
+              <span class="usercreated__label"> Contraseña generada : </span> <span class="usercreated__value"> ${ user.passText } </span>
+              Nota: copie la contraseña
+            `,
+            btnCancel: 'PERMANECER AQUI',
+            btnConfirm: 'REGRESAR A USUARIOS' })
+          .subscribe({
+            next: (confirm) => {
+              if(confirm) {
+                this.router.navigate(['/users']);
+                return;
+              }
+              this.form.reset();
+            }
+          });
       });
   }
 
@@ -134,4 +162,11 @@ export class UsersWriteComponent implements OnInit {
     this.router.navigate(['/users']);
   }
 
+  profileSelected(profile) {
+    if (['SELLER'].includes(profile.profileId)) {
+      this.showStore = true;
+      return;
+    }
+    this.showStore = false;
+  }
 }

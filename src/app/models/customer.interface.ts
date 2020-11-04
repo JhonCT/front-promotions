@@ -6,7 +6,17 @@ export interface ICustomer {
   lastName?: string;
   username?: string;
   email?: string;
+  phone?: string;
+  birthdate?: string;
+  countryId?: string;
+  userType?: string;
   active?: string;
+  city?: string;
+  address?: string;
+  identId?: string;
+  identification?: string;
+  currencyId?: string;
+  storeId?: string;
   player?: IPlayer;
   user?: IUser;
 }
@@ -16,8 +26,18 @@ export class Customer {
   firstName = '';
   lastName = '';
   email = '';
+  countryId = '';
+  phone = '';
+  birthdate = '';
   username = '';
+  userType = '';
   active = '';
+  city = '';
+  address = '';
+  storeId = '';
+  identId = '';
+  currencyId = '';
+  identification = '';
   player = new Player();
   user = new User();
   constructor(model?) {

@@ -15,8 +15,9 @@ export class MainComponent implements OnInit {
   sideNavOpened = true;
   menuGroups = [];
   storeLabel = 'Tienda: ';
-  firstName = '';
-  lastName = '';
+  fullName = '';
+  profile = '';
+  email = '';
 
   constructor(
     private mainSvc: MainService,
@@ -26,21 +27,26 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     const session = this.sessionSvc.getSession();
-    console.log('|session|asdasd', session);
-    const menu = this.lsSVc.getItem('XMnAUl', true);
-    this.storeLabel = `Tienda: ${session.storeName}`;
-    this.firstName = session.firstName;
-    this.lastName = session.lastName;
-    if(menu) {
-      this.menuGroups = menu;
-      return menu;
+    if(!session) {
+      this.sessionSvc.clearSession();
     }
+    console.log('|session|', session);
+    // const menu = this.lsSVc.getItem('XMnAUl', true);
+    this.storeLabel = `${session.storeName}`;
+    this.fullName = `${session.firstName} ${session.lastName}`;
+    // if(menu) {
+    //   this.menuGroups = menu;
+    //   return;
+    // }
     this.mainSvc.privilegies({}).subscribe((result: any) => {
       if (result.success) {
+        const user = result.data.item;
         const privileges = result.privilegesInfo;
         const menu = this.refactorMenu(privileges);
-        this.lsSVc.setItem('XMnAUl', menu, true);
+        // this.lsSVc.setItem('XMnAUl', menu, true);
         this.menuGroups = menu;
+        this.profile = user.profileName;
+        this.email = user.email;
         return;
       }
     });

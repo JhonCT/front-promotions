@@ -53,6 +53,7 @@ export const playersTableConfig = {
       { header: 'Username', align: 'left', key: 'username', width: '100', show: true },
       { header: 'Moneda', align: 'left', key: 'currencyId', width: '100', show: false },
       { header: 'Balance', align: 'right', key: 'coins', width: '80', show: true },
+      { header: 'ID de la tienda', align: 'left', key: 'storeId', width: '80', show: true },
       { header: 'Telefono', align: 'left', key: 'phone', width: '100', show: false },
       { header: 'Documento', align: 'left', key: 'identification', width: '100', show: false },
       { header: 'Direccion', align: 'left', key: 'address', width: '200', show: false },
@@ -66,7 +67,7 @@ export const playersTableConfig = {
     showFilters: true,
     showBtnReload: true,
     showBtnDownload: false,
-    showBtnAdd: false,
+    showBtnAdd: true,
     showChooseColumns: true,
   },
   active: {

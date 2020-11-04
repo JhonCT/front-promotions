@@ -24,6 +24,17 @@ export class CustomerService {
     });
   }
 
+  newItem({ headers = [], body }) {
+    return this.http.post<ICustomer>({
+      nameAPI: ApiNames.users,
+      urlOrPath: `/${this.SUBJECT}`,
+      headers,
+      body,
+      loadingOverlay: true,
+      addCredentials: true,
+    });
+  }
+
   activate({ id, headers = [], body = {} }) {
     return this.http.patch<ICustomer>({
       nameAPI: ApiNames.users,

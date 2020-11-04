@@ -1,3 +1,4 @@
+import { SideNavMenuItemPrimaryComponent } from './../shared/common/components/side-nav-menu-item-primary/side-nav-menu-item-primary.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainComponent } from './main.component';
@@ -33,6 +34,7 @@ const routerChildren: Routes = [];
     ToolbarComponent,
     SideNavToggleComponent,
     SideNavMenuItemComponent,
+    SideNavMenuItemPrimaryComponent,
     SideNavMenuGroupComponent,
     SideNavMenuGroupListComponent,
     ToolbarProfileIconComponent,

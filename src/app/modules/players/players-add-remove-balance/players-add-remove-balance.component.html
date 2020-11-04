@@ -1,0 +1,96 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-12 title">Agregar o Quitar Balance</div>
+
+          <div class="col-12">
+            <span class="customer-info">Informacion de cliente</span>
+          </div>
+
+          <app-form-field-input
+            class="col-12"
+            appearance="legacy"
+            formControlName="names"
+            [isReadonly]="true"
+            [type]="'text'"
+            label="Nombre *"
+            [error]="form.controls['names']"
+          >
+          </app-form-field-input>
+
+          <app-form-field-input
+            class="col-12"
+            appearance="legacy"
+            formControlName="username"
+            [type]="'text'"
+            [isReadonly]="true"
+            label="Username *"
+            [error]="form.controls['username']"
+          >
+          </app-form-field-input>
+
+          <app-form-field-input
+            class="col-12"
+            appearance="legacy"
+            formControlName="email"
+            [type]="'text'"
+            [isReadonly]="true"
+            label="E-mail *"
+            [error]="form.controls['email']"
+          >
+          </app-form-field-input>
+
+          <div class="col-12">
+            <span class="customer-info">Detalle</span>
+          </div>
+
+          <div class="col-12 d-flex justify-content-between balance">
+            <span>Balance</span>
+            <span>{{ customer.player.coins | money }}</span>
+          </div>
+
+          <div class="col-12 mt-2 mb-2">
+            <mat-divider></mat-divider>
+          </div>
+
+          <app-form-field-input
+            class="col-12"
+            appearance="outline"
+            formControlName="amount"
+			[type]="'text'"
+			mask="0*.00"
+			[dropSpecialCharacters]="false"
+            label="Monto *"
+            [error]="form.controls['amount']"
+          >
+          </app-form-field-input>
+
+          <div class="col-12">
+            <div class="d-flex buttons-submit justify-content-center">
+			  <button
+                (click)="removeBalance()"
+                #submit
+                [disabled]="!form.valid"
+                mat-raised-button
+                color="accent"
+              >
+                {{ "QUITAR BALANCE" }}
+              </button>
+              <button
+                (click)="addBalance()"
+                #submit
+                [disabled]="!form.valid"
+                mat-raised-button
+                color="primary"
+              >
+                {{ "AGREGAR BALANCE" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -25,6 +25,7 @@ export class AuthService {
       body,
       loadingOverlay: true,
       addCredentials: false,
+      showErrToastMsg: false,
     }).pipe(
       map((res: any) => {
         !res.changePassword && this.sessionSvc.setSession( {token: res.token, ...res.info} )

@@ -21,7 +21,7 @@ export class MainService {
       nameAPI: ApiNames.security,
       urlOrPath: `/privileges/info`,
       headers,
-      loadingOverlay: true,
+      loadingOverlay: false,
       addCredentials: true,
     });
   }

@@ -9,9 +9,10 @@ import { MaterialModule } from '@core/ui-kit/material.module';
 import { LocalCommonModule } from '@common/local-common.module';
 import { TableMultifilterModule } from '@core/components/table/table-multifilter/table-multifilter.module';
 import { AtomsFormFieldModule } from '@core/components/atoms/atoms-form-field/atoms-form-field.module';
+import { PlayersAddRemoveBalanceComponent } from './players-add-remove-balance/players-add-remove-balance.component';
 
 @NgModule({
-  declarations: [PlayersComponent, PlayersWriteComponent],
+  declarations: [PlayersComponent, PlayersWriteComponent, PlayersAddRemoveBalanceComponent],
   imports: [
     CommonModule,
     PlayersRoutingModule,

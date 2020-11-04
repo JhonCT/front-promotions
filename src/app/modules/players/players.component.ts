@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ToasterService } from '@core/services/toaster.service';
 import { filter, switchMap } from 'rxjs/operators';
 import { PlayersWriteComponent } from './players-write/players-write.component';
+import { PlayersAddRemoveBalanceComponent } from './players-add-remove-balance/players-add-remove-balance.component';
 
 @Component({
   selector: 'app-players',
@@ -127,7 +128,7 @@ export class PlayersComponent implements OnInit {
   }
 
   handleAddOrRemoveCoins(item: ICustomer): void {
-    const dialogRef = this.dialog.open(PlayersWriteComponent, {
+    const dialogRef = this.dialog.open(PlayersAddRemoveBalanceComponent, {
       disableClose: false,
       maxWidth: 500,
       panelClass: 'app-dialog',

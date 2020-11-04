@@ -32,7 +32,7 @@ export class InOutReportComponent implements OnInit {
     this.form = this.createForm({});
     this.storeSvc.storesManaged({}).subscribe((storesManaged: any) => {
       if(storesManaged.length > 1) {
-        storesManaged.push({ storeId: 0, name: 'Todas las tiendas' });
+        storesManaged.push({ storeId: '*', name: 'Todas las tiendas' });
       }
       this.stores = storesManaged;
     });

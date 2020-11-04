@@ -8,6 +8,7 @@ export const environment = {
   PLAYERS_API_URL: 'http://127.0.0.1:53113/v1',
   USERS_API_URL: 'http://127.0.0.1:53103/v1',
   WALLET_API_URL: 'http://127.0.0.1:53105/v1',
+  MULTILANGS_API_URL: 'http://127.0.0.1:51791/v1',
   GENERAL_API_KEY: '%9*e%c86B57dQNH4#X%*9qQ%X$q369',
 };
 

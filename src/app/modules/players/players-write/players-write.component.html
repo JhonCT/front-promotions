@@ -1,96 +1,188 @@
 <div class="container">
-  <div class="row">
-    <div class="col-12">
-      <form [formGroup]="form">
-        <div class="row">
-          <div class="col-12 title">Agregar o Quitar Balance</div>
+	<div class="row animate__animated animate__fadeInUp">
+		<div class="col-12">
+			<form [formGroup]="form">
+				<mat-card>
+					<div class="row">
+						<div class="col-12">
+							<h3>
+								{{
+									pageType == "new"
+										? "Registrar "
+										: "Actualizar "
+								}}
+								Perfil
+							</h3>
+						</div>
 
-          <div class="col-12">
-            <span class="customer-info">Informacion de cliente</span>
-          </div>
+						<app-form-field-select
+							class="col-12"
+							appearance="outline"
+							formControlName="userType"
+							label="Usar como username"
+							[options]="userType"
+							[display]="'text'"
+							[key]="'id'"
+							[error]="form.controls['userType']"
+						></app-form-field-select>
 
-          <app-form-field-input
-            class="col-12"
-            appearance="legacy"
-            formControlName="names"
-            [isReadonly]="true"
-            [type]="'text'"
-            label="Nombre *"
-            [error]="form.controls['names']"
-          >
-          </app-form-field-input>
+						<app-form-field-select
+							class="col-12"
+							appearance="outline"
+							formControlName="storeId"
+							label="Tienda"
+							[options]="stores"
+							[display]="'name'"
+							[key]="'storeId'"
+							[error]="form.controls['storeId']"
+						></app-form-field-select>
 
-          <app-form-field-input
-            class="col-12"
-            appearance="legacy"
-            formControlName="username"
-            [type]="'text'"
-            [isReadonly]="true"
-            label="Username *"
-            [error]="form.controls['username']"
-          >
-          </app-form-field-input>
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="firstName"
+							[type]="'text'"
+							label="Nombre *"
+							[error]="form.controls['firstName']"
+						>
+						</app-form-field-input>
 
-          <app-form-field-input
-            class="col-12"
-            appearance="legacy"
-            formControlName="email"
-            [type]="'text'"
-            [isReadonly]="true"
-            label="E-mail *"
-            [error]="form.controls['email']"
-          >
-          </app-form-field-input>
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="lastName"
+							[type]="'text'"
+							label="Apellidos *"
+							[error]="form.controls['lastName']"
+						>
+						</app-form-field-input>
 
-          <div class="col-12">
-            <span class="customer-info">Detalle</span>
-          </div>
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="email"
+							[type]="'text'"
+							label="E-mail *"
+							[error]="form.controls['email']"
+						>
+						</app-form-field-input>
 
-          <div class="col-12 d-flex justify-content-between balance">
-            <span>Balance</span>
-            <span>{{ customer.player.coins | money }}</span>
-          </div>
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="phone"
+							placeholder=""
+							[type]="'text'"
+							label="Telefono *"
+							[error]="form.controls['phone']"
+						>
+						</app-form-field-input>
 
-          <div class="col-12 mt-2 mb-2">
-            <mat-divider></mat-divider>
-          </div>
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="birthdate"
+							[type]="'text'"
+							label="Fecha de nacimiento *"
+							[error]="form.controls['birthdate']"
+						>
+						</app-form-field-input>
 
-          <app-form-field-input
-            class="col-12"
-            appearance="outline"
-            formControlName="amount"
-			[type]="'text'"
-			mask="0*.00"
-			[dropSpecialCharacters]="false"
-            label="Monto *"
-            [error]="form.controls['amount']"
-          >
-          </app-form-field-input>
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="birthdate"
+							[type]="'text'"
+							label="Fecha de nacimiento *"
+							[error]="form.controls['birthdate']"
+						>
+						</app-form-field-input>
 
-          <div class="col-12">
-            <div class="d-flex buttons-submit justify-content-center">
-			  <button
-                (click)="removeBalance()"
-                #submit
-                [disabled]="!form.valid"
-                mat-raised-button
-                color="accent"
-              >
-                {{ "QUITAR BALANCE" }}
-              </button>
-              <button
-                (click)="addBalance()"
-                #submit
-                [disabled]="!form.valid"
-                mat-raised-button
-                color="primary"
-              >
-                {{ "AGREGAR BALANCE" }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
+						<app-form-field-select
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="countryId"
+							(rowSelect)="countrySelected($event)"
+							label="Pais"
+							[options]="countries"
+							[display]="'name'"
+							[key]="'countryId'"
+							[error]="form.controls['countryId']"
+						></app-form-field-select>
+
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="city"
+							[type]="'text'"
+							label="Ciudad *"
+							[error]="form.controls['city']"
+						>
+						</app-form-field-input>
+
+						<app-form-field-input
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="address"
+							[type]="'text'"
+							label="Direccion *"
+							[error]="form.controls['address']"
+						>
+						</app-form-field-input>
+
+						<app-form-field-select
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="identId"
+							label="Tipo de identificacion"
+							[options]="idents"
+							[display]="'name'"
+							[key]="'identId'"
+							[error]="form.controls['identId']"
+						></app-form-field-select>
+
+						<app-form-field-select
+							class="col-12 col-md-6"
+							appearance="outline"
+							formControlName="currencyId"
+							label="Moneda"
+							[options]="currencies"
+							[display]="'nameSingular'"
+							[key]="'currencyId'"
+							[error]="form.controls['currencyId']"
+						></app-form-field-select>
+
+						<div class="col-12">
+							<div class="d-flex buttons-submit">
+								<button
+									(click)="handleCancel()"
+									mat-stroked-button
+									color="warn"
+								>
+									CANCELAR
+								</button>
+								<button
+									(click)="
+										pageType == 'new'
+											? handleNewItem()
+											: handleUpdItem()
+									"
+									#submit
+									[disabled]="!form.valid"
+									mat-raised-button
+									color="primary"
+								>
+									{{
+										pageType == "new"
+											? "REGISTRAR"
+											: "ACTUALIZAR"
+									}}
+								</button>
+							</div>
+						</div>
+					</div>
+				</mat-card>
+			</form>
+		</div>
+	</div>
 </div>
