@@ -129,7 +129,6 @@ export class UsersWriteComponent implements OnInit {
               El siguiente usuario ha sido creado exitosamente: \n
               <span class="usercreated__label"> Username: </span> <span class="usercreated__value"> ${user.email} </span>
               <span class="usercreated__label"> Contraseña generada : </span> <span class="usercreated__value"> ${ user.passText } </span>
-              Nota: copie la contraseña
             `,
             btnCancel: 'PERMANECER AQUI',
             btnConfirm: 'REGRESAR A USUARIOS' })

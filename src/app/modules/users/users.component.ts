@@ -141,7 +141,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
             msg: `
               Se ha reseteado la contraseña exitosamente: \n
               <span class="usercreated__label"> Contraseña generada : </span> <span class="usercreated__value"> ${ result.data.item.passText } </span>
-              Nota: copie la contraseña
             `,
             btnCancel: 'CERRAR',
             btnConfirm: 'ACEPTAR' })
