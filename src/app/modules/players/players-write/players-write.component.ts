@@ -78,7 +78,7 @@ export class PlayersWriteComponent implements OnInit {
           case 'ROOT':
             return result.data.items;
           case 'SELLER':
-            return result.data.items.find(item => item.storeId == session.storeId);
+            return result.data.items.filter(item => item.storeId == session.storeId);
         }
         return [];
       })
