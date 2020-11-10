@@ -2,6 +2,7 @@ version: "2.1"
 services:
   wlso.dev.operator.admin.app.no.wl:
     image: wlso.operator.admin.app.no.wl:0.0.1
+    restart: always
     build:
       context: .
       dockerfile: ./Dockerfile
