@@ -12,26 +12,28 @@ export class WalletService {
 
   constructor(private http: HttpClientService) {}
 
-  credit({ playerId, headers = [], amount }) {
+  credit({ playerId, headers = [], amount, comment = '' }) {
     return this.http.post<IPlayer>({
       nameAPI: ApiNames.wallet,
       urlOrPath: `/players/${playerId}/credit`,
       headers,
       body: {
         amount,
+        comment,
       },
       loadingOverlay: true,
       addCredentials: true,
     });
   }
 
-  debit({ playerId, headers = [], amount }) {
+  debit({ playerId, headers = [], amount, comment = '' }) {
     return this.http.post<IPlayer>({
       nameAPI: ApiNames.wallet,
       urlOrPath: `/players/${playerId}/debit`,
       headers,
       body: {
         amount,
+        comment,
       },
       loadingOverlay: true,
       addCredentials: true,

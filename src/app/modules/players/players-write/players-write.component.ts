@@ -89,8 +89,8 @@ export class PlayersWriteComponent implements OnInit {
 
   createForm(model: ICustomer): FormGroup {
     return this.formBuilder.group({
-      firstName: [model.firstName, Validators.compose([, MyValidator.minLength(4)])],
-      lastName: [model.lastName, Validators.compose([, MyValidator.minLength(4)])],
+      firstName: [model.firstName, Validators.compose([MyValidator.required, MyValidator.minLength(4)])],
+      lastName: [model.lastName, Validators.compose([MyValidator.required, MyValidator.minLength(4)])],
       email: [model.email, Validators.compose([MyValidator.email])],
       phone: [model.phone, Validators.compose([])],
       birthdate: [model.birthdate, Validators.compose([])],

@@ -15,6 +15,7 @@ const routes: Routes = [
       { path: 'store-managers', loadChildren: () => import('./modules/store-managers/store-managers.module').then(m => m.StoreManagersModule) },
       { path: 'players', loadChildren: () => import('./modules/players/players.module').then(m => m.PlayersModule) },
       { path: 'in-out-report', loadChildren: () => import('./modules/report/in-out-report/in-out-report.module').then(m => m.InOutReportModule) },
+      { path: 'packages', loadChildren: () => import('./modules/packages/packages.module').then(m => m.PackagesModule) },
     ],
   },
 ];

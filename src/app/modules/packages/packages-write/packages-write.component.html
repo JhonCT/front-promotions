@@ -11,63 +11,31 @@
 										? "Registrar "
 										: "Actualizar "
 								}}
-								Usuario
+								Paquete
 							</h3>
 						</div>
 
 						<app-form-field-input
 							class="col-12"
 							appearance="outline"
-							formControlName="firstName"
+							formControlName="amount"
 							[type]="'text'"
-							label="Nombre *"
-							[error]="form.controls['firstName']"
+							mask="0*.00"
+							[dropSpecialCharacters]="false"
+							label="Monto *"
+							[error]="form.controls['amount']"
 						>
 						</app-form-field-input>
 
 						<app-form-field-input
 							class="col-12"
 							appearance="outline"
-							formControlName="lastName"
+							formControlName="description"
 							[type]="'text'"
-							label="Apellidos *"
-							[error]="form.controls['lastName']"
+							label="Descripcion *"
+							[error]="form.controls['description']"
 						>
 						</app-form-field-input>
-
-						<app-form-field-input
-							class="col-12"
-							appearance="outline"
-							formControlName="email"
-							[type]="'text'"
-							label="E-mail *"
-							[error]="form.controls['email']"
-						>
-						</app-form-field-input>
-
-						<app-form-field-select
-							class="col-12"
-							appearance="outline"
-							(rowSelect)="profileSelected($event)"
-							formControlName="profileId"
-							label="Perfiles"
-							[options]="profiles"
-							[display]="'name'"
-							[key]="'profileId'"
-							[error]="form.controls['profileId']"
-						></app-form-field-select>
-
-						<app-form-field-select
-							class="col-12"
-							*ngIf="showStore"
-							appearance="outline"
-							formControlName="storeId"
-							label="Tienda"
-							[options]="stores"
-							[display]="'name'"
-							[key]="'storeId'"
-							[error]="form.controls['storeId']"
-						></app-form-field-select>
 
 						<div class="col-12">
 							<div class="d-flex buttons-submit">

@@ -11,5 +11,6 @@ export const NAV = {
     USERS_STORES: 'Adm. de tiendas',
     PLAYERS: 'Players',
     MY_STORE_IN_OUT: 'Reporte in/out',
+    PACKAGES: 'Paquetes',
   }
 }

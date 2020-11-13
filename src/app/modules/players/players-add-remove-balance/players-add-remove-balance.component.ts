@@ -49,6 +49,7 @@ export class PlayersAddRemoveBalanceComponent implements OnInit {
       lastName: [model.lastName, Validators.compose([])],
       username: [model.username, Validators.compose([])],
       coins: [model.player.coins, Validators.compose([])],
+      comment: [null, Validators.compose([])],
       amount: [ null, Validators.compose([MyValidator.required, MyValidator.minLength(1), MyValidator.min(1)])],
     });
   }
@@ -64,6 +65,7 @@ export class PlayersAddRemoveBalanceComponent implements OnInit {
           return this.walletSvc.credit({
             playerId: this.customer.player.playerId,
             amount: Math.round(data.amount * 100),
+            comment: data.comment || '',
           });
         })
       )
@@ -93,6 +95,7 @@ export class PlayersAddRemoveBalanceComponent implements OnInit {
           return this.walletSvc.debit({
             playerId: this.customer.player.playerId,
             amount: Math.round(data.amount * 100),
+            comment: data.comment || '',
           });
         })
       )
