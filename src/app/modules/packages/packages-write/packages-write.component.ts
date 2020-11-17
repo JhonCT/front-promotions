@@ -52,7 +52,7 @@ export class PackagesWriteComponent implements OnInit {
 
   createForm(model: IPackage): FormGroup {
     return this.formBuilder.group({
-      amount: [model.amount &&  Math.round(+model.amount / 100), Validators.compose([MyValidator.required, MyValidator.min(1)])],
+      amount: [model.amount && (+model.amount / 100), Validators.compose([MyValidator.required, MyValidator.min(1)])],
       description: [model.description, Validators.compose([MyValidator.required, MyValidator.minLength(1)])],
     });
   }
