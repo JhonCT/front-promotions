@@ -3,7 +3,13 @@
 # comandos para los despliegues
 # * * * * * * * * * * * * * * * * * *
 
-# MAIN
-docker rm -f operator-admin-app-no-wl_wlso.dev.operator.admin.app.no.wl_1 \
-&& docker-compose up  --build -d --no-deps wlso.dev.operator.admin.app.no.wl
+# LIVE
+cd /home/assosaramos/operator-admin-app-no-wl/ \
+&& git checkout master \
+&& git pull \
+&& git --no-pager show --summary \
+&& docker image prune -f \
+&& docker-compose --project-name casinovip365_ --file docker-compose.yaml build --force-rm live.ope.shop.desktop \
+&& docker-compose --project-name casinovip365_ --file docker-compose.yaml rm -f live.ope.shop.desktop \
+&& docker-compose --project-name casinovip365_ --file docker-compose.yaml up -d --no-deps live.ope.shop.desktop
 

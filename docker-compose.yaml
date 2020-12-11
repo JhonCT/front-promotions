@@ -1,21 +1,20 @@
 version: "2.1"
 services:
-  wlso.dev.operator.admin.app.no.wl:
-    image: wlso.operator.admin.app.no.wl:0.0.1
+  live.ope.admin.app.no.wl:
     restart: always
     build:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      - ENV_SECURITY_API_URL=https://boadmin.casinovip365.com/security-admin/v1
-      - ENV_PLAYERS_API_URL=https://boadmin.casinovip365.com/players/v1
-      - ENV_USERS_API_URL=https://boadmin.casinovip365.com/users/v1
-      - ENV_WALLET_API_URL=https://boadmin.casinovip365.com/wallet/v1
-      - ENV_MULTILANGS_API_URL=https://boadmin.casinovip365.com/multilanguage/v1
+      - ENV_SECURITY_API_URL=https://bovoyager.casinovip365.com/api/security-admin/v1
+      - ENV_PLAYERS_API_URL=https://bovoyager.casinovip365.com/api/players/v1
+      - ENV_USERS_API_URL=https://bovoyager.casinovip365.com/api/users/v1
+      - ENV_WALLET_API_URL=https://bovoyager.casinovip365.com/api/wallet/v1
+      - ENV_MULTILANGS_API_URL=https://bovoyager.casinovip365.com/api/multilanguage/v1
     ports:
-      - 8081:80
+      - "80"
     networks:
-      - operator-admin-services_wlso.backend
+      - casinovip365__live.backend
 networks:
-  operator-admin-services_wlso.backend:
+  casinovip365__live.backend:
     external: true
