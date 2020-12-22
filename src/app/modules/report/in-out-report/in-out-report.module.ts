@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { InOutReportRoutingModule } from './in-out-report-routing.module';
 import { InOutReportComponent } from './in-out-report.component';
@@ -21,6 +21,9 @@ import { AtomsFormFieldModule } from '@core/components/atoms/atoms-form-field/at
     LocalCommonModule,
     TableMultifilterModule,
     AtomsFormFieldModule,
+  ],
+  providers: [
+    DatePipe
   ]
 })
 export class InOutReportModule { }

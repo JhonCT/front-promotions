@@ -12,7 +12,7 @@
         [key]="'storeId'"
         [error]="form.controls['storeId']"
       ></app-form-field-select>
-      <app-form-field-input
+      <!-- <app-form-field-input
         class="col-4"
         appearance="outline"
         formControlName="dateStart"
@@ -23,8 +23,27 @@
         label="Desde *"
         [error]="form.controls['dateStart']"
       >
-      </app-form-field-input>
-      <app-form-field-input
+	  </app-form-field-input> -->
+	  <!-- <div class="col-4"> -->
+		<mat-form-field class="col-4" appearance="outline" floatLabel="always">
+		  <mat-label>Fecha de nacimiento</mat-label>
+		  <input
+			formControlName="dateStart"
+			autocomplete="off"
+			class="cursor-pointer"
+			readonly
+			matInput
+			[matDatepicker]="pickerDateStart"
+			(click)="pickerDateStart.open()"
+			(focus)="pickerDateStart.open()"
+			placeholder="...">
+			<mat-datepicker-toggle matSuffix [for]="pickerDateStart"></mat-datepicker-toggle>
+		  <mat-datepicker
+			#pickerDateStart>
+		  </mat-datepicker>
+		</mat-form-field>
+	  <!-- </div> -->
+      <!-- <app-form-field-input
         class="col-4"
         appearance="outline"
         formControlName="dateEnd"
@@ -35,7 +54,24 @@
         label="Hasta *"
         [error]="form.controls['dateEnd']"
       >
-      </app-form-field-input>
+	  </app-form-field-input> -->
+	  <mat-form-field class="col-4" appearance="outline" floatLabel="always">
+		<mat-label>Fecha de nacimiento</mat-label>
+		<input
+		  formControlName="dateEnd"
+		  autocomplete="off"
+		  class="cursor-pointer"
+		  readonly
+		  matInput
+		  [matDatepicker]="pickerDateEnd"
+		  (click)="pickerDateEnd.open()"
+		  (focus)="pickerDateEnd.open()"
+		  placeholder="...">
+		  <mat-datepicker-toggle matSuffix [for]="pickerDateEnd"></mat-datepicker-toggle>
+		<mat-datepicker
+		  #pickerDateEnd>
+		</mat-datepicker>
+	  </mat-form-field>
       <div class="col-12 d-flex justify-content-end">
         <button
           mat-raised-button
