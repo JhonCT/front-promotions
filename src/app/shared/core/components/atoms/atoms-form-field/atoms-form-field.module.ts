@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormFieldCheckboxModule } from './form-field-checkbox/form-field-checkbox.module';
 import { FormFieldInputModule } from './form-field-input/form-field-input.module';
 import { FormFieldSelectModule } from './form-field-select/form-field-select.module';
+import { ControlErrorComponent } from './control-error/control-error.component';
 import { FormRadioGroupModule } from './form-radio-group/form-radio-group.module';
 import { FormFieldTextareaModule } from './form-field-textarea/form-field-textarea.module';
 import { InputSearchModule } from './input-search/input-search.module';
