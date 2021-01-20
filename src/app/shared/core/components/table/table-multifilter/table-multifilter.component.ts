@@ -19,6 +19,8 @@ export class TableMultifilterComponent implements OnInit {
   @Input() columns: any[];
   @Input() pageSize: string;
   @Input() pageSizeOptions: string[];
+  @Input() pageIndex: string;
+  @Input() totalRecords: string;
 
   @Input() actions = false;
   @Input() index = false;
@@ -44,6 +46,7 @@ export class TableMultifilterComponent implements OnInit {
   @Output() clicBtn = new EventEmitter();
   @Output() runFilter = new EventEmitter();
   @Output() newRegister = new EventEmitter();
+  @Output() changePages = new EventEmitter();
 
   columnsSelected = new FormControl();
 
@@ -72,7 +75,7 @@ export class TableMultifilterComponent implements OnInit {
 
   chargeDataTable({rows, filters}): void {
     this.dataSource = new MatTableDataSource<any>(rows);
-    this.dataSource.paginator = this.paginator;
+    !this.totalRecords && (this.dataSource.paginator = this.paginator);
     this.showFilters && this.multifilter.chargeFilter();
   }
 
@@ -108,6 +111,10 @@ export class TableMultifilterComponent implements OnInit {
   chooseColumns(event): void {
     this.lsSvc.setItem(`tc_${this.tableId}`, event, true);
     this.handleDisplayCols();
+  }
+
+  handleChangePage(e) {
+    this.changePages.emit( e );
   }
 
 }

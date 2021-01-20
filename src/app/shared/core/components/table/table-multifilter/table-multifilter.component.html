@@ -29,7 +29,7 @@
 		</div>
 	</div>
 
-	<div class="table__container">
+	<div class="table__container" style="max-height: calc(100vh - 372px)">
 		<table mat-table [dataSource]="dataSource">
 
 			<!-- index Column -->
@@ -55,7 +55,7 @@
 				</td>
 			</ng-container>
 
-			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 		</table>
@@ -79,7 +79,8 @@
 		</div>
 		<div class="table__footer__paginator">
 
-			<mat-paginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons>
+			<mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+			[length]="totalRecords" (page)="handleChangePage($event)" showFirstLastButtons>
 			</mat-paginator>
 
 		</div>

@@ -14,7 +14,10 @@ export class PlayersService {
     private http: HttpClientService,
   ) { }
 
-  items({ headers = [] }) {
+  items({ headers = [],  pagingSize = '', pagingIndex = '' }) {
+    pagingSize && headers.push({ key: 'paging_size', val: pagingSize});
+    pagingIndex && headers.push({ key: 'paging_index', val: pagingIndex});
+    pagingSize && pagingIndex && headers.push({ key: 'enable_paging', val: 'true'});
     return this.http.get<IPlayer>({
       nameAPI: ApiNames.players,
       urlOrPath: `/${this.SUBJECT}`,
