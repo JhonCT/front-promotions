@@ -17,5 +17,9 @@
     (clicBtn)="handleAction($event)"
     (runFilter)="handleFilter($event)"
     (newRegister)="handleNew($event)"
+
+	[pageIndex] = "pageIndex"
+	[totalRecords] = "totalRecords"
+	(changePages)="handleChangePages($event)"
   ></app-table-multifilter>
 </mat-card>

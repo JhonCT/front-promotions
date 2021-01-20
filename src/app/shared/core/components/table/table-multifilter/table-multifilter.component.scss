@@ -72,7 +72,8 @@ mat-form-field.mat-form-field {
 }
 
 .table__container {
-  overflow-y: hidden;
+  // overflow-y: hidden;
+  overflow: auto;
   @media screen and (max-width: 800px) {
     overflow-x: scroll;
   }

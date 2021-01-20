@@ -24,6 +24,9 @@ export class PlayersComponent implements OnInit {
   filters: any[] = [];
 
   filtersAllowed = [];
+  pageIndex = playersTableConfig.dataTable.pageIndex;
+  pageSize = playersTableConfig.dataTable.pageSizeDefault;
+  totalRecords;
 
   @ViewChild(TableMultifilterComponent)
   tableMultifilter: TableMultifilterComponent;
@@ -44,9 +47,10 @@ export class PlayersComponent implements OnInit {
   items() {
     let headers = [];
     this.filters.length && headers.push( { key: 'filters', val: JSON.stringify(this.filters) } );
-    this.customerSvc.items( { headers: headers } ).subscribe({
+    this.customerSvc.items( { headers: headers, pagingSize: `${ this.pageSize }`, pagingIndex: `${ this.pageIndex + 1 }` } ).subscribe({
       next: (result) => {
         // this.toast.success( { message: result['kindMessage'] } );
+        this.totalRecords = result.data.itemsCounter;
         this.tableMultifilter.chargeDataTable({
           rows: result.data.items.map(( item, i ) => {
             let actions = this.config.listActions();
@@ -69,6 +73,7 @@ export class PlayersComponent implements OnInit {
   }
 
   handleFilter(event: any): void {
+    this.pageIndex = 0;
     this.filters = event;
     this.items();
   }
@@ -137,6 +142,12 @@ export class PlayersComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       this.items();
     });
+  }
+
+  handleChangePages(e) {
+    this.pageIndex = e.pageIndex;
+    this.pageSize = e.pageSize;
+    this.items();
   }
 
 }
