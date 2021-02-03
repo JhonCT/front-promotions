@@ -32,11 +32,10 @@
               "./node_modules/ngx-toastr/toastr.css",
               "./node_modules/animate.css/animate.min.css"
             ],
-            "scripts": [
-            ],
+            "scripts": [],
             "allowedCommonJsDependencies": [
               "export-to-csv"
-           ]
+            ]
           },
           "configurations": {
             "production": {
@@ -129,6 +128,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "operator-admin-app-no-wl"
+    }
+  },
+  "defaultProject": "operator-admin-app-no-wl",
+  "cli": {
+    "analytics": false
+  }
 }

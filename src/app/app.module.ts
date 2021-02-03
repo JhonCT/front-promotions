@@ -9,6 +9,7 @@ import { MainModule } from './modules/main.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LocalCommonModule } from '@common/local-common.module';
 import { UsersModule } from './modules/users/users.module';
+import { AppHttpInterceptor } from './shared/common/services/http-interceptor';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -22,6 +23,7 @@ import { UsersModule } from './modules/users/users.module';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpClientInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
