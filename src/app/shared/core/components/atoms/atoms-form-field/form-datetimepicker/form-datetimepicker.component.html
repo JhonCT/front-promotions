@@ -1,0 +1,19 @@
+<mat-form-field [appearance]="appearance" [floatLabel]='floatLabel' [class]="error && error.invalid && (error.dirty || error.touched)  ? 'mat-form-field-invalid ng-invalid' : '' ">
+  <input matInput 
+    [ngxMatDatetimePicker]="picker" 
+    placeholder="Choose a date" 
+    [formControl]="value"
+    [min]="minDate" 
+    [max]="maxDate"
+    [disabled]="disabled"
+    (click)="_openDatepickerOnClick(picker)"
+    
+    (dateChange)="_dateChangeHandler($event.value)"
+    (dateInput)="_dateChangeHandler($event.value)"
+  >
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <ngx-mat-datetime-picker #picker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+    [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond" [touchUi]="touchUi"
+    [color]="color" [enableMeridian]="enableMeridian">
+  </ngx-mat-datetime-picker>
+</mat-form-field>

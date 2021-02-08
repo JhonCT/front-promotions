@@ -9,6 +9,9 @@ import { FormRadioGroupModule } from './form-radio-group/form-radio-group.module
 import { FormFieldTextareaModule } from './form-field-textarea/form-field-textarea.module';
 import { InputSearchModule } from './input-search/input-search.module';
 import { InputEditModule } from './input-edit/input-edit.module';
+import { FormFieldDatePickerModule } from './form-datepicker/form-field-datepicker.module';
+import { FormFieldDateTimePickerModule } from './form-datetimepicker/form-datetimepicker.module';
+
 
 @NgModule({
   declarations: [],
@@ -21,6 +24,8 @@ import { InputEditModule } from './input-edit/input-edit.module';
     FormFieldTextareaModule,
     InputSearchModule,
     InputEditModule,
+    FormFieldDatePickerModule,
+    FormFieldDateTimePickerModule
   ],
   exports: [
     FormFieldCheckboxModule,
@@ -30,6 +35,8 @@ import { InputEditModule } from './input-edit/input-edit.module';
     FormFieldTextareaModule,
     InputSearchModule,
     InputEditModule,
+    FormFieldDateTimePickerModule,
+    FormFieldDatePickerModule
   ]
 })
 export class AtomsFormFieldModule { }

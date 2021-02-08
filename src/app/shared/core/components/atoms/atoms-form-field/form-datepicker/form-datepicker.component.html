@@ -1,0 +1,16 @@
+<mat-form-field [appearance]="appearance" [floatLabel]='floatLabel' [class]="error && error.invalid && (error.dirty || error.touched)  ? 'mat-form-field-invalid ng-invalid' : '' ">
+    <mat-label>Seleccione fecha</mat-label>
+    <input matInput
+     [matDatepicker]="picker"
+     [max]="_max"
+     [min]="_min"
+     [matDatepickerFilter]="_customFilter"   
+     [formControl]="value" 
+     (click)="_openDatepickerOnClick(picker)"
+     (focus)="_openDatepickerOnFocus(picker)"
+     (dateChange)="_dateChangeHandler($event.value)"
+     (dateInput)="_dateChangeHandler($event.value)"
+     >
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker [touchUi]="touchUi"></mat-datepicker>
+</mat-form-field>
