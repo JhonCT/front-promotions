@@ -6,6 +6,7 @@ import { LocalStorageService } from 'app/shared/core/services/local-storage.serv
 import { ExportCsvService } from '../../../services/export-csv.service';
 import { IFilter } from '../multi-filter/multi-filter.interface';
 import { MultiFilterComponent } from '../multi-filter/multi-filter.component';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-table-multifilter',
@@ -34,6 +35,14 @@ export class TableMultifilterComponent implements OnInit {
   @Input() showBtnReload = false;
   @Input() showChooseColumns = false;
 
+  menuGroups: any;
+  menuOptionDefaultSelected: String;
+  numberDaysReport: Number;
+  dateStart: String;
+  dateEnd: String;
+
+  @ViewChild(MatMenuTrigger) menu: MatMenuTrigger;
+
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -47,6 +56,7 @@ export class TableMultifilterComponent implements OnInit {
   @Output() runFilter = new EventEmitter();
   @Output() newRegister = new EventEmitter();
   @Output() changePages = new EventEmitter();
+  @Output() onClickGroupOption = new EventEmitter();
 
   columnsSelected = new FormControl();
 
@@ -66,21 +76,21 @@ export class TableMultifilterComponent implements OnInit {
     if (lsCols) {
       this.displayedColumns = lsCols;
     } else {
-      this.displayedColumns = this.columns.filter(column => column.show).map(column => column.key );
+      this.displayedColumns = this.columns.filter(column => column.show).map(column => column.key);
       this.index && this.displayedColumns.unshift('index');
       this.actions && this.displayedColumns.push('actions');
     }
     return this.displayedColumns;
   }
 
-  chargeDataTable({rows, filters}): void {
+  chargeDataTable({ rows, filters }): void {
     this.dataSource = new MatTableDataSource<any>(rows);
     !this.totalRecords && (this.dataSource.paginator = this.paginator);
     this.showFilters && this.multifilter.chargeFilter();
   }
 
   handleAction(action, row: any): void {
-    this.clicBtn.emit( { action: action.action, row } );
+    this.clicBtn.emit({ action: action.action, row });
   }
 
   handleFilter(event: any[]): void {
@@ -90,11 +100,11 @@ export class TableMultifilterComponent implements OnInit {
   }
 
   handleRefresh(): void {
-    this.runFilter.emit( this.filterSelected );
+    this.runFilter.emit(this.filterSelected);
   }
 
   handleNew(): void {
-    this.newRegister.emit( true );
+    this.newRegister.emit(true);
   }
 
   exportToCsv(): void {
@@ -114,7 +124,11 @@ export class TableMultifilterComponent implements OnInit {
   }
 
   handleChangePage(e) {
-    this.changePages.emit( e );
+    this.changePages.emit(e);
   }
 
+  handleGroupOption(menuOption) {
+    this.menuOptionDefaultSelected = menuOption.val;
+    this.onClickGroupOption.emit(menuOption);
+  }
 }

@@ -65,6 +65,9 @@ export class MainComponent implements OnInit {
   }
 
   menuPipeItem(item) {
+    if (item.group == 'REPORT') {
+      item.route = 'reports/' + item.route;
+    }
     return { icon: item.icon, link: item.route, label: NAV.TITLE[ item.title.split('.')[1]] }
   }
 

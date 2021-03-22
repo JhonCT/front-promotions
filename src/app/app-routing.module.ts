@@ -10,11 +10,11 @@ const routes: Routes = [
     path: '',
     component: MainComponent,
     children: [
-      { path: 'home', 		loadChildren: () => import('./modules/home/home.module').then((m) => m.HomeModule), canActivate: [AuthGuard]  },
+      { path: 'home', loadChildren: () => import('./modules/home/home.module').then((m) => m.HomeModule), canActivate: [AuthGuard] },
       { path: 'users', loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule), canActivate: [AuthGuard] },
       { path: 'store-managers', loadChildren: () => import('./modules/store-managers/store-managers.module').then(m => m.StoreManagersModule) },
       { path: 'players', loadChildren: () => import('./modules/players/players.module').then(m => m.PlayersModule) },
-      { path: 'in-out-report', loadChildren: () => import('./modules/report/in-out-report/in-out-report.module').then(m => m.InOutReportModule) },
+      { path: 'reports', loadChildren: () => import('./modules/report/report.module').then(m => m.InOutReportModule) },
       { path: 'packages', loadChildren: () => import('./modules/packages/packages.module').then(m => m.PackagesModule) },
     ],
   },
@@ -25,4 +25,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

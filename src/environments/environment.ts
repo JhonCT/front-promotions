@@ -9,6 +9,7 @@ export const environment = {
   USERS_API_URL: 'http://127.0.0.1:53103/v1',
   WALLET_API_URL: 'http://127.0.0.1:53105/v1',
   MULTILANGS_API_URL: 'http://127.0.0.1:51791/v1',
+  REPORT_API_URL: 'http://127.0.0.1:53205/v1',
   GENERAL_API_KEY: '%9*e%c86B57dQNH4#X%*9qQ%X$q369',
 };
 

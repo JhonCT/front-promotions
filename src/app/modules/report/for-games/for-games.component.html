@@ -1,0 +1,68 @@
+<app-title title="Reporte de Eventos por Juegos"></app-title>
+<mat-card>
+	<form [formGroup]="form">
+		<div class="row">
+			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
+				<mat-label>Desde</mat-label>
+				<input formControlName="dateStart" autocomplete="off" class="cursor-pointer" readonly matInput
+					[matDatepicker]="pickerDateStart" (click)="pickerDateStart.open()" (focus)="pickerDateStart.open()"
+					placeholder="...">
+				<mat-datepicker-toggle matSuffix [for]="pickerDateStart"></mat-datepicker-toggle>
+				<mat-datepicker #pickerDateStart>
+				</mat-datepicker>
+			</mat-form-field>
+			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
+				<mat-label>Hasta</mat-label>
+				<input formControlName="dateEnd" autocomplete="off" class="cursor-pointer" readonly matInput
+					[matDatepicker]="pickerDateEnd" (click)="pickerDateEnd.open()" (focus)="pickerDateEnd.open()"
+					placeholder="...">
+				<mat-datepicker-toggle matSuffix [for]="pickerDateEnd"></mat-datepicker-toggle>
+				<mat-datepicker #pickerDateEnd>
+				</mat-datepicker>
+			</mat-form-field>
+			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
+				<mat-label>Tienda</mat-label>
+				<input type="text" placeholder="..." aria-label="Store" matInput [formControl]="storeControl"
+					[matAutocomplete]="store">
+				<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+				<mat-autocomplete #store="matAutocomplete" (optionSelected)="storeSelected($event.option.value)">
+					<mat-option *ngFor="let option of filteredStoreOptions | async" [key]="option.name"
+						[value]="option.name">
+						{{option.name}}
+					</mat-option>
+				</mat-autocomplete>
+			</mat-form-field>
+			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
+				<mat-label>Proveedor</mat-label>
+				<input type="text" placeholder="..." aria-label="Provider" matInput [formControl]="providerControl"
+					[matAutocomplete]="provider">
+				<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+				<mat-autocomplete #provider="matAutocomplete" (optionSelected)="providerSelected($event.option.value)">
+					<mat-option *ngFor="let option of filteredProviderOptions | async" [value]="option.name">
+						{{option.name}}
+					</mat-option>
+				</mat-autocomplete>
+			</mat-form-field>
+			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
+				<mat-label>Player</mat-label>
+				<input type="text" placeholder="..." aria-label="Player" matInput [formControl]="playerControl"
+					(keyup.enter)="findCustomer()">
+			</mat-form-field>
+			<div class="col-2 justify-content-center">
+				<button mat-raised-button color="primary" (click)="forGamesByStores()" [disabled]="!form.valid">
+					BUSCAR
+				</button>
+			</div>
+		</div>
+	</form>
+</mat-card>
+<br>
+<mat-card>
+	<app-table-multifilter [tableId]="config.dataTable.tableId" [columns]="config.dataTable.columns"
+		[pageSizeOptions]="config.dataTable.pageSizeOptions" [pageSize]="config.dataTable.pageSizeDefault"
+		[actions]="config.dataTable.actionColumn" [index]="config.dataTable.indexColumn" [filters]="[]"
+		[showFilters]="config.dataTable.showFilters" [showBtnReload]="config.dataTable.showBtnReload"
+		[showBtnDownload]="config.dataTable.showBtnDownload" [showBtnAdd]="config.dataTable.showBtnAdd"
+		[showChooseColumns]="config.dataTable.showChooseColumns" (onClickGroupOption)="groupBy($event)">
+	</app-table-multifilter>
+</mat-card>

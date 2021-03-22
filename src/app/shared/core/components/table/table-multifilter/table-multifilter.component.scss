@@ -4,7 +4,7 @@ table {
 
 .cdk-column {
   &-pKey {
-    min-width: 60px !important;
+    min-width: 20px !important;
   }
   &-actions {
     min-width: 160px !important;
@@ -19,7 +19,7 @@ table {
 
 .mat-table .mat-cell {
   line-height: 2;
-  min-height: 30px;
+  min-height: 28px;
   padding: 0 8px;
 }
 
@@ -102,6 +102,14 @@ mat-form-field.mat-form-field {
 
 .table__headers__filter {
   flex: 1;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.primary-color {
+  color: #37D668;
 }
 
 .table__headers__buttons {
