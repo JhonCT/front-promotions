@@ -6,7 +6,7 @@ import * as _moment from 'moment';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { ReportForProvidersTableConfig } from './for-providers.component.config';
+import { ReportForProvidersDayByDayTableConfig, ReportForProvidersTableConfig } from './for-providers.component.config';
 import { ReportService } from '../report.service';
 import { TableMultifilterComponent } from 'app/shared/core/components/table/table-multifilter/table-multifilter.component';
 import { ToasterService } from 'app/shared/core/services/toaster.service';
@@ -84,6 +84,33 @@ export class ForProvidersComponent implements OnInit {
   groupByProvidersDayByDay = []
   groupByStores = []
   groupByStoresDayByDay = []
+
+  columnsWithDay = [
+    "txId",
+    "day",
+    "storeId",
+    "providerId",
+    "players",
+    "games",
+    "coinInCounter",
+    "coinInAmount",
+    "coinOutCounter",
+    "coinOutAmount",
+    "netWin"
+  ]
+
+  columnsWithoutDay = [
+    "txId",
+    "storeId",
+    "providerId",
+    "players",
+    "games",
+    "coinInCounter",
+    "coinInAmount",
+    "coinOutCounter",
+    "coinOutAmount",
+    "netWin"
+  ]
 
   @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
 
@@ -181,7 +208,7 @@ export class ForProvidersComponent implements OnInit {
         this.groupByStores = items.groupByStores;
         this.groupByStoresDayByDay = items.groupByStoresDayByDay;
 
-        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed);
+        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithDay);
 
         this.chargeHeaderTable(dateStart, dateEnd, this.menuOptionDefaultSelected);
       }, error: (err) => {
@@ -242,22 +269,22 @@ export class ForProvidersComponent implements OnInit {
   groupBy(option: any) {
     switch (option.key) {
       case 'stores-providers':
-        this.chargeDataTable(this.groupByStoresAndProviders, []);
+        this.chargeDataTable(this.groupByStoresAndProviders, [], this.columnsWithoutDay);
         break;
       case 'stores-providers-day-by-day':
-        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, []);
+        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, [], this.columnsWithDay);
         break;
       case 'providers':
-        this.chargeDataTable(this.groupByProviders, []);
+        this.chargeDataTable(this.groupByProviders, [], this.columnsWithoutDay);
         break;
       case 'providers-day-by-day':
-        this.chargeDataTable(this.groupByProvidersDayByDay, []);
+        this.chargeDataTable(this.groupByProvidersDayByDay, [], this.columnsWithDay);
         break;
       case 'stores':
-        this.chargeDataTable(this.groupByStores, []);
+        this.chargeDataTable(this.groupByStores, [], this.columnsWithoutDay);
         break;
       case 'stores-day-by-day':
-        this.chargeDataTable(this.groupByStoresDayByDay, []);
+        this.chargeDataTable(this.groupByStoresDayByDay, [], this.columnsWithDay);
         break;
       default:
         this.toast.error({ message: 'Not option selected' });
@@ -280,7 +307,8 @@ export class ForProvidersComponent implements OnInit {
     return headers;
   }
 
-  chargeDataTable(items: IReport[], filtersAllowed: any) {
+  chargeDataTable(items: IReport[], filtersAllowed: any, columnsSelected: any) {
+    this.tableMultifilter.chooseColumns(columnsSelected);
     this.tableMultifilter.chargeDataTable({
       rows: items.map((i, index) => this._formatItem(i, index)),
       filters: filtersAllowed
