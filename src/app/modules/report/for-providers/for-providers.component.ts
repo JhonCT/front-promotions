@@ -185,15 +185,15 @@ export class ForProvidersComponent implements OnInit { form: FormGroup;
   private _getProvider(id: Number) {
     switch (id) {
       case 1:
-        return 'RGS System';
+        return 'CT Gaming';
       case 2:
-        return 'INBET Originals';
+        return 'Inbet Original';
       case 3:
-        return 'INBET Replicas';
+        return 'Inbet Replica';
       case 4:
         return 'VIVO Gaming';
       default:
-        return 'Not selected';
+        return 'Slots Gold';
     }
   }
 
