@@ -168,8 +168,6 @@ export class ForProvidersComponent implements OnInit {
       headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
     }
 
-    console.log(headers);
-
     let dateStart = new Date(dateStartControlValue);
     let dateEnd = new Date(dateEndControlValue);
 
@@ -292,7 +290,12 @@ export class ForProvidersComponent implements OnInit {
   chargeHeaderTable(dateStart: Date, dateEnd: Date, option: String) {
     this.tableMultifilter.menuGroups = this.menuGroupOptions;
     this.tableMultifilter.menuOptionDefaultSelected = option;
-    this.tableMultifilter.numberDaysReport = new Date(dateEnd.getTime() - dateStart.getTime()).getDate();
+
+    if (`${dateStart.getFullYear()}-${('0' + (dateStart.getMonth() + 1)).slice(-2)}-${('0' + dateStart.getDate()).slice(-2)}` == `${dateEnd.getFullYear()}-${('0' + (dateEnd.getMonth() + 1)).slice(-2)}-${('0' + dateEnd.getDate()).slice(-2)}`) {
+      this.tableMultifilter.numberDaysReport = 1;
+    } else {
+      this.tableMultifilter.numberDaysReport = new Date(dateEnd.getTime() - dateStart.getTime()).getDate();
+    }
     this.tableMultifilter.dateStart = `${dateStart.getFullYear()}-${('0' + (dateStart.getMonth() + 1)).slice(-2)}-${('0' + dateStart.getDate()).slice(-2)}`;
     this.tableMultifilter.dateEnd = `${dateEnd.getFullYear()}-${('0' + (dateEnd.getMonth() + 1)).slice(-2)}-${('0' + dateEnd.getDate()).slice(-2)}`;
     if (this.providerId || this.playerId || this.storeId) {

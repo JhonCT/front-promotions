@@ -32,8 +32,9 @@
 							</span>
 						</h4>
 					</div>
-					<div *ngElse>
-						<h4>Datos de un {{ numberDaysReport }} día, de la fecha {{ dateStart }}</h4>
+					<div *ngIf="numberDaysReport == 1">
+						<h4>Datos de un <span class="primary-color">{{ numberDaysReport }}</span> día, de la fecha
+							<span class="primary-color">{{ dateStart }}</span></h4>
 					</div>
 				</div>
 			</div>
