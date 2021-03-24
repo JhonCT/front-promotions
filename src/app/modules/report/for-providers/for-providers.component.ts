@@ -10,9 +10,9 @@ import { ReportForProvidersTableConfig } from './for-providers.component.config'
 import { ReportService } from '../report.service';
 import { TableMultifilterComponent } from 'app/shared/core/components/table/table-multifilter/table-multifilter.component';
 import { ToasterService } from 'app/shared/core/services/toaster.service';
-import { IProvider, IStore } from '../report';
-import {DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS} from '@angular/material/core';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import { IProvider, IReport, IStore } from '../report';
+import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 const moment = _rollupMoment || _moment;
 
 export const MY_MOMENT_FORMATS = {
@@ -53,7 +53,8 @@ export const MY_FORMATS = {
   ]
 })
 
-export class ForProvidersComponent implements OnInit { form: FormGroup;
+export class ForProvidersComponent implements OnInit {
+  form: FormGroup;
   storeOptions: IStore[];
   filteredStoreOptions: Observable<IStore[]>;
   providerOptions: IProvider[];
@@ -67,8 +68,22 @@ export class ForProvidersComponent implements OnInit { form: FormGroup;
 
   config = ReportForProvidersTableConfig;
 
-  menuGroupOptions = [{ key: 'stores-providers', val: 'Tiendas y Proveedores' }, { key: 'providers', val: 'Proveedores' }, { key: 'stores', val: 'Tiendas' }];
-  menuOptionDefaultSelected: String = 'Tiendas y Proveedores';
+  menuGroupOptions = [
+    { key: 'stores-providers', val: 'Tiendas y Proveedores' },
+    { key: 'stores-providers-day-by-day', val: 'Tiendas y Proveedores - Diariamente' },
+    { key: 'providers', val: 'Proveedores' },
+    { key: 'providers-day-by-day', val: 'Proveedores - Diariamente' },
+    { key: 'stores', val: 'Tiendas' },
+    { key: 'stores-day-by-day', val: 'Tiendas - Diariamente' }
+  ];
+  menuOptionDefaultSelected: String = 'Tiendas y Proveedores - Diariamente';
+
+  groupByStoresAndProviders = []
+  groupByStoresAndProvidersDayByDay = []
+  groupByProviders = []
+  groupByProvidersDayByDay = []
+  groupByStores = []
+  groupByStoresDayByDay = []
 
   @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
 
@@ -100,7 +115,12 @@ export class ForProvidersComponent implements OnInit { form: FormGroup;
   }
 
   ngOnInit(): void {
-    //this.forProvidersByStoresOfOneDay(this.menuGroupOptions[0].val);
+    let date = new Date();
+    let dateStartEpoch = Date.parse(`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`)
+    let dateEndEpoch = Date.parse(`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}T23:59:59`)
+
+    console.log(dateStartEpoch, dateEndEpoch);
+    this.forProvidersByStores(dateStartEpoch, dateEndEpoch);
   }
 
   storeSelected(option: String) {
@@ -138,45 +158,51 @@ export class ForProvidersComponent implements OnInit { form: FormGroup;
     return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
   }
 
-  forProvidersByStores() {
+  forProvidersByStores(dateStartEpoch: Number, dateEndEpoch: Number) {
     let dateStartControlValue = this.form.controls.dateStart.value;
     let dateEndControlValue = this.form.controls.dateEnd.value;
-    let headers = this.addHeaders(dateStartControlValue, dateEndControlValue);
-    let timezone = this.getTimeZone();
-    headers.push({ key: 'resource', val: 'providers' })
-    headers.push({ key: 'timezone', val: timezone })
-    if (this.providerId != '' || this.storeId != '' || this.playerId != '') {
-      headers.push({ key: 'provider_id', val: this.providerId });
-      headers.push({ key: 'store_id', val: this.storeId });
-      headers.push({ key: 'player_id', val: this.playerId  })
+    let headers = this.addHeaders();
+
+    if (dateStartEpoch && dateEndEpoch) {
+      headers.push({ key: 'date_start', val: dateStartEpoch.toString() });
+      headers.push({ key: 'date_start', val: dateEndEpoch.toString() });
     }
+    headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
+    headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
 
     let dateStart = new Date(dateStartControlValue);
     let dateEnd = new Date(dateEndControlValue);
 
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
-        this.tableMultifilter.chargeDataTable({
-          rows: result.data.items.map((i, index) => this._formatItem(i, index)),
-          filters: result.filtersAllowed
-        });
-        this.chargeHeaderTable(dateStart, dateEnd, this.menuGroupOptions[0].val);
+        let items: any = Object.assign({}, result.data.items)
+        this.groupByStoresAndProviders = items.groupByProvidersAndStores;
+        this.groupByStoresAndProvidersDayByDay = items.groupByProvidersAndStoresDayByDay;
+        this.groupByProviders = items.groupByProviders;
+        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay;
+        this.groupByStores = items.groupByStores;
+        this.groupByStoresDayByDay = items.groupByStoresDayByDay;
+
+        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed);
+
+        this.chargeHeaderTable(dateStart, dateEnd, this.menuOptionDefaultSelected);
       }, error: (err) => {
         this.toast.error({ message: err['kindMessage'] });
       }
     })
   }
 
-  private _formatItem(item: any, index: number) {
-    let providerName = this._getProvider(item.providerId);
+  private _formatItem(item: IReport, index: number) {
+    let providerId = parseInt(item.providerId);
+    let providerName = providerId ? this._getProvider(providerId) : item.providerId;
     let coinInAmount = item.coinInAmount.toFixed(2);
     let coinOutAmount = item.coinOutAmount.toFixed(2);
     let netWin = item.netWin.toFixed(2);
 
     item.providerId = providerName;
-    item.coinInAmount = coinInAmount;
-    item.coinOutAmount = coinOutAmount;
-    item.netWin = netWin;
+    item.coinInAmount = parseFloat(coinInAmount);
+    item.coinOutAmount = parseFloat(coinOutAmount);
+    item.netWin = parseFloat(netWin);
     item.txId = index + 1;
 
     return item;
@@ -215,93 +241,25 @@ export class ForProvidersComponent implements OnInit { form: FormGroup;
     )
   }
 
-  // TODO: Falta más información para implementarlo
-  forProvidersByStoresOfOneDay(option: String) {
-    let headers = [];
-    let date = new Date();
-    let dateStart = Date.parse(`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}T00:00:00.000Z`);
-    console.log(`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}T00:00:00`);
-    let dateEnd = new Date().getTime();
-    let today = "2021-03-01"
-    headers.push({ key: 'resource', val: 'providers' })
-    headers.push({ key: 'date_start', val: dateStart })
-    headers.push({ key: 'date_end', val: dateEnd })
-    headers.push({ key: 'day', val: today });
-
-    console.log(headers);
-
-    this.reportService.reports({ headers: headers }).subscribe({
-      next: (result) => {
-        this.tableMultifilter.chargeDataTable({
-          rows: result.data.items,
-          filters: result.filtersAllowed
-        });
-        let dStart = new Date(dateStart * 1000);
-        let dEnd = new Date(dateEnd * 1000);
-        this.chargeHeaderTable(dStart, dEnd, option);
-      }, error: (err) => {
-        this.toast.error({ message: err['kindMessage'] });
-      }
-    });
-  }
-  // END TODO
-
-  forProvidersByStoresGroupByProviders(option: String) {
-    let dateStartControlValue = this.form.controls.dateStart.value;
-    let dateEndControlValue = this.form.controls.dateEnd.value;
-    let headers = this.addHeaders(dateStartControlValue, dateEndControlValue);
-    headers.push({ key: 'group_by', val: 'providers' })
-    headers.push({ key: 'resource', val: 'providers' })
-    let dateStart = new Date(dateStartControlValue);
-    let dateEnd = new Date(dateEndControlValue);
-
-    this.reportService.reportsGroupByResource({ headers: headers }).subscribe({
-      next: (result) => {
-        this.tableMultifilter.chargeDataTable({
-          rows: result.data.items.map((i, index) => this._formatItem(i, index)),
-          filters: result.filtersAllowed,
-        });
-        this.chargeHeaderTable(dateStart, dateEnd, option);
-      }, error: (err) => {
-        console.log(err);
-        this.toast.error({ message: err['kindMessage'] });
-      }
-    });
-  }
-
-  forProvidersByStoresGroupByStores(option: String) {
-    let dateStartControlValue = this.form.controls.dateStart.value;
-    let dateEndControlValue = this.form.controls.dateEnd.value;
-    let headers = this.addHeaders(dateStartControlValue, dateEndControlValue);
-    headers.push({ key: 'group_by', val: 'stores' })
-    headers.push({ key: 'resource', val: 'providers' })
-    let dateStart = new Date(dateStartControlValue);
-    let dateEnd = new Date(dateEndControlValue);
-
-    this.reportService.reportsGroupByResource({ headers: headers }).subscribe({
-      next: (result) => {
-        this.tableMultifilter.chargeDataTable({
-          rows: result.data.items.map((i, index) => this._formatItem(i, index)),
-          filters: result.filtersAllowed,
-        });
-        this.chargeHeaderTable(dateStart, dateEnd, option);
-      }, error: (err) => {
-        console.log(err);
-        this.toast.error({ message: err['kindMessage'] });
-      }
-    });
-  }
-
   groupBy(option: any) {
     switch (option.key) {
       case 'stores-providers':
-        this.forProvidersByStores();
+        this.chargeDataTable(this.groupByStoresAndProviders, []);
+        break;
+      case 'stores-providers-day-by-day':
+        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, []);
         break;
       case 'providers':
-        this.forProvidersByStoresGroupByProviders(option.val);
+        this.chargeDataTable(this.groupByProviders, []);
+        break;
+      case 'providers-day-by-day':
+        this.chargeDataTable(this.groupByProvidersDayByDay, []);
         break;
       case 'stores':
-        this.forProvidersByStoresGroupByStores(option.val);
+        this.chargeDataTable(this.groupByStores, []);
+        break;
+      case 'stores-day-by-day':
+        this.chargeDataTable(this.groupByStoresDayByDay, []);
         break;
       default:
         this.toast.error({ message: 'Not option selected' });
@@ -309,15 +267,26 @@ export class ForProvidersComponent implements OnInit { form: FormGroup;
     }
   }
 
-  addHeaders(dateStartControlValue: any, dateEndControlValue: any) {
+  addHeaders() {
     let headers = [];
-    let date = new Date();
-    //let today = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+    let timezone = this.getTimeZone();
+    headers.push({ key: 'resource', val: 'providers' })
+    headers.push({ key: 'timezone', val: timezone })
 
-    headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
-    headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
+    if (this.providerId != '' || this.storeId != '' || this.playerId != '') {
+      headers.push({ key: 'provider_id', val: this.providerId });
+      headers.push({ key: 'store_id', val: this.storeId });
+      headers.push({ key: 'player_id', val: this.playerId })
+    }
 
     return headers;
+  }
+
+  chargeDataTable(items: IReport[], filtersAllowed: any) {
+    this.tableMultifilter.chargeDataTable({
+      rows: items.map((i, index) => this._formatItem(i, index)),
+      filters: filtersAllowed
+    });
   }
 
   chargeHeaderTable(dateStart: Date, dateEnd: Date, option: String) {
@@ -326,21 +295,17 @@ export class ForProvidersComponent implements OnInit { form: FormGroup;
     this.tableMultifilter.numberDaysReport = new Date(dateEnd.getTime() - dateStart.getTime()).getDate();
     this.tableMultifilter.dateStart = `${dateStart.getFullYear()}-${('0' + (dateStart.getMonth() + 1)).slice(-2)}-${('0' + dateStart.getDate()).slice(-2)}`;
     this.tableMultifilter.dateEnd = `${dateEnd.getFullYear()}-${('0' + (dateEnd.getMonth() + 1)).slice(-2)}-${('0' + dateEnd.getDate()).slice(-2)}`;
+
   }
 
   openPanel(): void {
     this.autoTrigger.openPanel();
   }
 
-
-
   createForm(model: any): FormGroup {
     return this.formBuilder.group({
       dateStart: [moment(), Validators.compose([MyValidator.required])],
       dateEnd: [moment(), Validators.compose([MyValidator.required])],
-      storeId: [Validators.compose([MyValidator.required])],
-      providerId: [Validators.compose([MyValidator.required])],
-      playerId: [Validators.compose([MyValidator.required])],
     });
   }
 

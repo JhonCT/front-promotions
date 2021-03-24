@@ -13,6 +13,7 @@ export const ReportForProvidersTableConfig = {
       { header: 'Fecha', align: 'left', key: 'day', width: '80', show: true },
       { header: 'Tienda', align: 'left', key: 'storeId', width: '100', show: true },
       { header: 'Proveedores', align: 'left', key: 'providerId', width: '120', show: true },
+      { header: 'Proveedores', align: 'left', key: 'providerName', width: '120', show: false },
       { header: 'Players', align: 'right', key: 'players', width: '80', show: true },
       { header: 'Juegos', align: 'right', key: 'games', width: '80', show: true },
       { header: '# Coin In', align: 'right', key: 'coinInCounter', width: '100', show: true },

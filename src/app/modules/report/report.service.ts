@@ -38,7 +38,7 @@ export class ReportService {
   reportsGroupByResource({ headers = [] }) {
     return this.http.get<IReport>({
       nameAPI: ApiNames.reports,
-      urlOrPath: `/${this.SUBJECT}/group-by-resource`,
+      urlOrPath: `/${this.SUBJECT}/find`,
       headers,
       loadingOverlay: true,
       addCredentials: true,

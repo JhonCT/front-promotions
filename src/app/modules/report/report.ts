@@ -1,10 +1,11 @@
 export interface IReport {
+  txId?: Number;
   day?: String;
   storeId?: String;
   playerId?: String;
   games?: String;
   players?: Number;
-  providerId?: String;
+  providerId?: string;
   providers?: Number;
   coinInCounter?: Number;
   coinInAmount?: Number;
@@ -14,6 +15,7 @@ export interface IReport {
 }
 
 export class Report {
+  txId = '';
   day = '';
   storeId = '';
   playerId = '';
