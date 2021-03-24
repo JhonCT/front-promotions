@@ -156,16 +156,7 @@ export class ForGamesComponent implements OnInit {
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
         this.tableMultifilter.chargeDataTable({
-          rows: result.data.items.map(i => {
-            if (i.providerId == '1') {
-              i.providerId = 'RGS System';
-            } else if (i.providerId == '2') {
-              i.providerId = 'INBET Games - Original'
-            } else {
-              i.providerId = 'INBET Games - Replicas'
-            }
-            return i
-          }),
+          rows: result.data.items.map((i, index) => this._formatItem(i, index)),
           filters: result.filtersAllowed
         });
         this.chargeHeaderTable(dateStart, dateEnd, this.menuGroupOptions[0].val);
