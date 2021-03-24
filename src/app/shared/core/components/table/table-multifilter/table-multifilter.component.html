@@ -6,7 +6,7 @@
 					<h4>Agrupado por&nbsp;</h4>
 					<h4 mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu"
 						class="primary-color">
-						{{ menuOptionDefaultSelected }} ▼ ▼
+						{{ menuOptionDefaultSelected }} ▼
 					</h4>
 					<mat-menu #menu="matMenu">
 						<button mat-menu-item *ngFor="let menu of menuGroups" (click)="handleGroupOption(menu)">

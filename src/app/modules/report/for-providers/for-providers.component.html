@@ -48,7 +48,7 @@
 				<input type="text" placeholder="..." aria-label="Player" matInput [formControl]="playerControl" (keyup.enter)="findCustomer()">
 			</mat-form-field>
 			<div class="col-2 justify-content-center">
-				<button mat-raised-button color="primary" (click)="forProvidersByStores()" [disabled]="!form.valid">
+				<button mat-raised-button color="primary" (click)="forProvidersByStores(null, null)" [disabled]="!form.valid">
 					BUSCAR
 				</button>
 			</div>
