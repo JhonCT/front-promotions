@@ -6,6 +6,7 @@ variables=(
 'ENV_USERS_API_URL'
 'ENV_WALLET_API_URL'
 'ENV_MULTILANGS_API_URL'
+'ENV_REPORT_API_URL'
 )
 
 for v in ${variables[@]}; do

@@ -11,6 +11,7 @@ services:
       - ENV_USERS_API_URL=https://bonautilus.casinovip365.com/api/users/v1
       - ENV_WALLET_API_URL=https://bonautilus.casinovip365.com/api/wallet/v1
       - ENV_MULTILANGS_API_URL=https://bonautilus.casinovip365.com/api/multilanguage/v1
+      - ENV_REPORT_API_URL=https://bonautilus.casinovip365.com/api/reports/v1
     ports:
       - "80"
     networks:
