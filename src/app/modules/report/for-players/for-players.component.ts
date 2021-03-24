@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import {FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {IProvider, IStore } from '../report';
-import {ReportForPlayersTableConfig} from '../for-players/for-players.component.config';
-import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
-import {TableMultifilterComponent} from '@core/components/table/table-multifilter/table-multifilter.component';
-import {ReportService} from '../report.service';
-import {ToasterService} from '@core/services/toaster.service';
-import {startWith, debounceTime, distinctUntilChanged, switchMap, map} from 'rxjs/operators';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { IProvider, IStore } from '../report';
+import { ReportForPlayersTableConfig } from '../for-players/for-players.component.config';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { TableMultifilterComponent } from '@core/components/table/table-multifilter/table-multifilter.component';
+import { ReportService } from '../report.service';
+import { ToasterService } from '@core/services/toaster.service';
+import { startWith, debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import moment from 'moment';
-import {MyValidator} from '@core/components/atoms/atoms-form-field/control-error/my-validator';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import { MyValidator } from '@core/components/atoms/atoms-form-field/control-error/my-validator';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
 export const MY_MOMENT_FORMATS = {
   parseInput: 'YYYY-MM-DD HH:mm:ss',
@@ -66,7 +66,7 @@ export class ForPlayersComponent implements OnInit {
 
   config = ReportForPlayersTableConfig;
 
-  menuGroupOptions = [{key: 'stores-players', val: 'Tiendas y Players'}, {key: 'players', val: 'Players'}, {key: 'stores', val: 'Tiendas'}];
+  menuGroupOptions = [{ key: 'stores-players', val: 'Tiendas y Players' }, { key: 'players', val: 'Players' }, { key: 'stores', val: 'Tiendas' }];
   menuOptionDefaultSelected: String = 'Tiendas y Players';
 
   @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
@@ -148,7 +148,7 @@ export class ForPlayersComponent implements OnInit {
     if (this.providerId != '' || this.storeId != '' || this.playerId != '') {
       headers.push({ key: 'provider_id', val: this.providerId });
       headers.push({ key: 'store_id', val: this.storeId });
-      headers.push({ key: 'player_id', val: this.playerId  })
+      headers.push({ key: 'player_id', val: this.playerId })
     }
     let dateStart = new Date(dateStartControlValue);
     let dateEnd = new Date(dateEndControlValue);
@@ -184,15 +184,15 @@ export class ForPlayersComponent implements OnInit {
   private _getProvider(id: Number) {
     switch (id) {
       case 1:
-        return 'RGS System';
+        return 'CT Gaming';
       case 2:
-        return 'INBET Originals';
+        return 'Inbet Original';
       case 3:
-        return 'INBET Replicas';
+        return 'Inbet Replica';
       case 4:
         return 'VIVO Gaming';
       default:
-        return 'Not selected';
+        return 'Slots Gold';
     }
   }
 
