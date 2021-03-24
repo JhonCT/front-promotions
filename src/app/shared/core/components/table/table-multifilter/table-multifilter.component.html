@@ -22,6 +22,14 @@
 							<span class="primary-color">{{ dateStart }}</span>
 							y
 							<span class="primary-color">{{ dateEnd }}</span>
+							<br>
+							<span *ngIf="provider">prov: <span class="primary-color">{{ provider }}</span></span>
+							<span *ngIf="game">
+								tienda: <span class="primary-color">{{ game }}</span>
+							</span>
+							<span *ngIf="player">
+								player: <span class="primary-color">{{ player }}</span>
+							</span>
 						</h4>
 					</div>
 					<div *ngElse>

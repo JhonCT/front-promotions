@@ -29,7 +29,6 @@ export class ReportService {
       nameAPI: ApiNames.reports,
       urlOrPath: `/${this.SUBJECT}/of-one-day`,
       headers,
-      loadingOverlay: true,
       addCredentials: true,
 
     })
@@ -40,7 +39,6 @@ export class ReportService {
       nameAPI: ApiNames.reports,
       urlOrPath: `/${this.SUBJECT}/find`,
       headers,
-      loadingOverlay: true,
       addCredentials: true,
     });
   }
@@ -50,7 +48,6 @@ export class ReportService {
       nameAPI: ApiNames.reports,
       urlOrPath: `/${this.SUBJECT}/find`,
       headers,
-      loadingOverlay: true,
       addCredentials: true,
     });
   }
@@ -60,7 +57,6 @@ export class ReportService {
       nameAPI: ApiNames.reports,
       urlOrPath: `/${this.SUBJECT}/stores`,
       headers,
-      loadingOverlay: true,
       addCredentials: true
     })
   }

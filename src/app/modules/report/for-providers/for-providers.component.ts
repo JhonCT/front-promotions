@@ -88,7 +88,6 @@ export class ForProvidersComponent implements OnInit {
   @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
 
   @ViewChild(TableMultifilterComponent) tableMultifilter: TableMultifilterComponent;
-
   constructor(
     private formBuilder: FormBuilder,
     private reportService: ReportService,
@@ -116,10 +115,8 @@ export class ForProvidersComponent implements OnInit {
 
   ngOnInit(): void {
     let date = new Date();
-    let dateStartEpoch = Date.parse(`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`)
-    let dateEndEpoch = Date.parse(`${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}T23:59:59`)
-
-    console.log(dateStartEpoch, dateEndEpoch);
+    let dateStartEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 1).getTime();
+    let dateEndEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 99).getTime();
     this.forProvidersByStores(dateStartEpoch, dateEndEpoch);
   }
 
@@ -165,10 +162,13 @@ export class ForProvidersComponent implements OnInit {
 
     if (dateStartEpoch && dateEndEpoch) {
       headers.push({ key: 'date_start', val: dateStartEpoch.toString() });
-      headers.push({ key: 'date_start', val: dateEndEpoch.toString() });
+      headers.push({ key: 'date_end', val: dateEndEpoch.toString() });
+    } else {
+      headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
+      headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
     }
-    headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
-    headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
+
+    console.log(headers);
 
     let dateStart = new Date(dateStartControlValue);
     let dateEnd = new Date(dateEndControlValue);
@@ -218,7 +218,7 @@ export class ForProvidersComponent implements OnInit {
         return 'Inbet Replica';
       case 4:
         return 'VIVO Gaming';
-      default:
+      case 5:
         return 'Slots Gold';
     }
   }
@@ -295,7 +295,11 @@ export class ForProvidersComponent implements OnInit {
     this.tableMultifilter.numberDaysReport = new Date(dateEnd.getTime() - dateStart.getTime()).getDate();
     this.tableMultifilter.dateStart = `${dateStart.getFullYear()}-${('0' + (dateStart.getMonth() + 1)).slice(-2)}-${('0' + dateStart.getDate()).slice(-2)}`;
     this.tableMultifilter.dateEnd = `${dateEnd.getFullYear()}-${('0' + (dateEnd.getMonth() + 1)).slice(-2)}-${('0' + dateEnd.getDate()).slice(-2)}`;
-
+    if (this.providerId || this.playerId || this.storeId) {
+      this.tableMultifilter.provider = this._getProvider(+this.providerId);
+      this.tableMultifilter.player = this.playerControl.value;
+      this.tableMultifilter.game = this.storeId;
+    }
   }
 
   openPanel(): void {
