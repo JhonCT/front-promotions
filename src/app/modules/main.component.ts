@@ -30,7 +30,6 @@ export class MainComponent implements OnInit {
     if(!session) {
       this.sessionSvc.clearSession();
     }
-    console.log('|session|', session);
     // const menu = this.lsSVc.getItem('XMnAUl', true);
     this.storeLabel = `${session.storeName}`;
     this.fullName = `${session.firstName} ${session.lastName}`;
