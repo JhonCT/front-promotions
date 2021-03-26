@@ -1,4 +1,5 @@
 export interface IReport {
+  txId?: Number;
   day?: String;
   storeId?: String;
   playerId?: String;
@@ -14,6 +15,7 @@ export interface IReport {
 }
 
 export class Report {
+  txId = '';
   day = '';
   storeId = '';
   playerId = '';

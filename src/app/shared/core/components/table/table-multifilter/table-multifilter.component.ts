@@ -40,6 +40,9 @@ export class TableMultifilterComponent implements OnInit {
   numberDaysReport: Number;
   dateStart: String;
   dateEnd: String;
+  provider: String;
+  player: String;
+  game: String;
 
   @ViewChild(MatMenuTrigger) menu: MatMenuTrigger;
 

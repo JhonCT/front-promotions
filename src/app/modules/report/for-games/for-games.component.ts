@@ -4,7 +4,7 @@ import { MyValidator } from './../../../shared/core/components/atoms/atoms-form-
 import { default as _rollupMoment } from 'moment';
 import * as _moment from 'moment';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, find, map, startWith, switchMap } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ReportForGamesTableConfig } from './for-games.component.config';
 import { ReportService } from '../report.service';
@@ -197,7 +197,6 @@ export class ForGamesComponent implements OnInit {
     headers.push({ key: 'date_end', val: dateEnd })
     headers.push({ key: 'day', val: today });
 
-    console.log(headers);
 
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
@@ -262,10 +261,12 @@ export class ForGamesComponent implements OnInit {
   }
 
   private _formatItem(item: any, index: number) {
-    let providerName = this._getProvider(item.providerId);
+    let providerName =  this._getProviderv2(item.providerId);
     let coinInAmount = item.coinInAmount.toFixed(2);
     let coinOutAmount = item.coinOutAmount.toFixed(2);
     let netWin = item.netWin.toFixed(2);
+
+    console.log(providerName)
 
     item.providerId = providerName;
     item.coinInAmount = coinInAmount;
@@ -274,6 +275,12 @@ export class ForGamesComponent implements OnInit {
     item.txId = index + 1;
 
     return item;
+  }
+
+  private _getProviderv2(id: Number) {
+    return this.reportService.providers({ headers: [] }).pipe(
+      map(result => result.data.items.find(i => i.providerId == `${id}`))
+    )
   }
 
   private _getProvider(id: Number) {

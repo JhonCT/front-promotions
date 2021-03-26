@@ -6,7 +6,7 @@
 					<h4>Agrupado por&nbsp;</h4>
 					<h4 mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu"
 						class="primary-color">
-						{{ menuOptionDefaultSelected }}
+						{{ menuOptionDefaultSelected }} ▼
 					</h4>
 					<mat-menu #menu="matMenu">
 						<button mat-menu-item *ngFor="let menu of menuGroups" (click)="handleGroupOption(menu)">
@@ -22,10 +22,20 @@
 							<span class="primary-color">{{ dateStart }}</span>
 							y
 							<span class="primary-color">{{ dateEnd }}</span>
+							<br>
+							<span *ngIf="provider">prov: <span class="primary-color">{{ provider }}</span></span>
+							<span *ngIf="game">
+								tienda: <span class="primary-color">{{ game }}</span>
+							</span>
+							<span *ngIf="player">
+								player: <span class="primary-color">{{ player }}</span>
+							</span>
 						</h4>
 					</div>
-					<div *ngElse>
-						<h4>Datos de un {{ numberDaysReport }} día, de la fecha {{ dateStart }}</h4>
+					<div *ngIf="numberDaysReport == 1">
+						<h4>Datos de un <span class="primary-color">{{ numberDaysReport }}</span> día, de la fecha
+							<span class="primary-color">{{ dateStart }}</span>
+						</h4>
 					</div>
 				</div>
 			</div>
