@@ -193,8 +193,8 @@ export class ForProvidersComponent implements OnInit {
     let dateStartEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 1).getTime();
     let dateEndEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 99).getTime();
     this.forProvidersByStores(dateStartEpoch, dateEndEpoch);
-    this.getProviders()
-    this.getStores()
+    this.getProviders();
+    this.getStores();
   }
 
   forProvidersByStores(dateStartEpoch: Number, dateEndEpoch: Number) {
@@ -207,7 +207,7 @@ export class ForProvidersComponent implements OnInit {
       headers.push({ key: 'date_end', val: dateEndEpoch.toString() });
     } else {
       headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
-      headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
+      headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString().replace(/0/g, '9') });
     }
 
     let dateStart = new Date(dateStartControlValue);
