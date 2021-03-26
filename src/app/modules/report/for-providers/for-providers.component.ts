@@ -190,24 +190,24 @@ export class ForProvidersComponent implements OnInit {
 
   ngOnInit(): void {
     let date = new Date();
-    let dateStartEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 1).getTime();
-    let dateEndEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 99).getTime();
+    let dateStartEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 1).getTime().toString();
+    let dateEndEpoch = this._convertDateToEpochFinal(date);
     this.forProvidersByStores(dateStartEpoch, dateEndEpoch);
     this.getProviders();
     this.getStores();
   }
 
-  forProvidersByStores(dateStartEpoch: Number, dateEndEpoch: Number) {
+  forProvidersByStores(dateStartEpoch: String, dateEndEpoch: String) {
     let dateStartControlValue = this.form.controls.dateStart.value;
     let dateEndControlValue = this.form.controls.dateEnd.value;
     let headers = this._addHeaders();
 
     if (dateStartEpoch && dateEndEpoch) {
-      headers.push({ key: 'date_start', val: dateStartEpoch.toString() });
-      headers.push({ key: 'date_end', val: dateEndEpoch.toString() });
+      headers.push({ key: 'date_start', val: dateStartEpoch });
+      headers.push({ key: 'date_end', val: dateEndEpoch });
     } else {
       headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
-      headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString().replace(/0/g, '9') });
+      headers.push({ key: 'date_end', val: this._convertDateToEpochFinal(new Date(dateEndControlValue)) });
     }
 
     let dateStart = new Date(dateStartControlValue);
@@ -391,6 +391,10 @@ export class ForProvidersComponent implements OnInit {
     let day = ('0' + date.getDate()).slice(-2)
 
     return `${date.getFullYear()}-${month}-${day}`
+  }
+
+  _convertDateToEpochFinal(date: Date): String {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999).getTime().toString();
   }
 
   openPanel(): void {

@@ -7,6 +7,7 @@ import { ExportCsvService } from '../../../services/export-csv.service';
 import { IFilter } from '../multi-filter/multi-filter.interface';
 import { MultiFilterComponent } from '../multi-filter/multi-filter.component';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-table-multifilter',
@@ -118,7 +119,8 @@ export class TableMultifilterComponent implements OnInit {
       });
       return newItem;
     });
-    this.eCvsSvc.exportCsv('', data);
+
+    this.eCvsSvc.exportCsv('', data, false, this.columns.map(i => i.header));
   }
 
   chooseColumns(event): void {
