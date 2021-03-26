@@ -30,7 +30,7 @@ export class ExportCsvService {
     return false;
   }
 
-  exportCsv(fileName: string = 'info', data: any): void {
+  exportCsv(fileName: string = 'info', data: any, useKeysAsHeaders: boolean, headers: any): void {
     if (this.isJson(data)) {
       const options = {
         filename: `${this.now().text}-${fileName}`,
@@ -41,9 +41,10 @@ export class ExportCsvService {
         showTitle: false,
         useTextFile: false,
         useBom: true,
-        useKeysAsHeaders: true,
-        // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+        useKeysAsHeaders: useKeysAsHeaders,
+        headers: headers
       };
+
       const csvExporter = new ExportToCsv(options);
       csvExporter.generateCsv(data);
     }
