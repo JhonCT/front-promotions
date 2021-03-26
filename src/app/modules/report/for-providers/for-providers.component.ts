@@ -13,6 +13,7 @@ import { ToasterService } from 'app/shared/core/services/toaster.service';
 import { IProvider, IReport, IStore } from '../report';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { importExpr } from '@angular/compiler/src/output/output_ast';
 const moment = _rollupMoment || _moment;
 
 export const MY_MOMENT_FORMATS = {
@@ -55,9 +56,9 @@ export const MY_FORMATS = {
 
 export class ForProvidersComponent implements OnInit {
   form: FormGroup;
-  storeOptions: IStore[];
+  providers: IProvider[] = []
+  stores: IStore[] = []
   filteredStoreOptions: Observable<IStore[]>;
-  providerOptions: IProvider[];
   filteredProviderOptions: Observable<IProvider[]>;
   storeControl = new FormControl();
   providerControl = new FormControl();
@@ -99,10 +100,60 @@ export class ForProvidersComponent implements OnInit {
     "netWin"
   ]
 
+  columnsWithDayForProviders = [
+    "txId",
+    "day",
+    "providerId",
+    "players",
+    "games",
+    "coinInCounter",
+    "coinInAmount",
+    "coinOutCounter",
+    "coinOutAmount",
+    "netWin"
+  ]
+
+  columnsWithDayForStores = [
+    "txId",
+    "day",
+    "storeId",
+    "players",
+    "games",
+    "coinInCounter",
+    "coinInAmount",
+    "coinOutCounter",
+    "coinOutAmount",
+    "netWin"
+  ]
+
   columnsWithoutDay = [
     "txId",
     "storeId",
     "providerId",
+    "players",
+    "games",
+    "coinInCounter",
+    "coinInAmount",
+    "coinOutCounter",
+    "coinOutAmount",
+    "netWin"
+  ]
+
+  columnsWithoutDayForProviders = [
+    "txId",
+    "providerId",
+    "players",
+    "games",
+    "coinInCounter",
+    "coinInAmount",
+    "coinOutCounter",
+    "coinOutAmount",
+    "netWin"
+  ]
+
+  columnsWithoutDayForStores = [
+    "txId",
+    "storeId",
     "players",
     "games",
     "coinInCounter",
@@ -124,20 +175,17 @@ export class ForProvidersComponent implements OnInit {
 
     this.filteredStoreOptions = this.storeControl.valueChanges
       .pipe(
-        startWith(''),
-        debounceTime(400),
-        distinctUntilChanged(),
-        switchMap(value => this._filterStores(value))
+        startWith<string | IStore>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filterStores(name) : this.stores.slice())
       );
 
     this.filteredProviderOptions = this.providerControl.valueChanges
       .pipe(
-        startWith(''),
-        debounceTime(400),
-        distinctUntilChanged(),
-        switchMap(value => this._filterProviders(value))
+        startWith<string | IProvider>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filterProviders(name) : this.providers.slice())
       );
-
   }
 
   ngOnInit(): void {
@@ -145,20 +193,42 @@ export class ForProvidersComponent implements OnInit {
     let dateStartEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 1).getTime();
     let dateEndEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 99).getTime();
     this.forProvidersByStores(dateStartEpoch, dateEndEpoch);
+    this.getProviders()
+    this.getStores()
   }
 
-  storeSelected(option: String) {
-    this.reportService.stores({ headers: [] }).subscribe({
-      next: (result) => {
-        this.storeId = `${result.data.items.find(i => i.name == option).storeId}`;
-      }
-    })
-  }
+  forProvidersByStores(dateStartEpoch: Number, dateEndEpoch: Number) {
+    let dateStartControlValue = this.form.controls.dateStart.value;
+    let dateEndControlValue = this.form.controls.dateEnd.value;
+    let headers = this._addHeaders();
 
-  providerSelected(option: String) {
-    this.reportService.providers({ headers: [] }).subscribe({
+    if (dateStartEpoch && dateEndEpoch) {
+      headers.push({ key: 'date_start', val: dateStartEpoch.toString() });
+      headers.push({ key: 'date_end', val: dateEndEpoch.toString() });
+    } else {
+      headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
+      headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
+    }
+
+    let dateStart = new Date(dateStartControlValue);
+    let dateEnd = new Date(dateEndControlValue);
+
+    this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
-        this.providerId = `${result.data.items.find(i => i.name == option).providerId}`;
+        let items: any = result.data.items
+
+        this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item, index) => this._formatItem(item, index));
+        this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item, index) => this._formatItem(item, index));
+        this.groupByProviders = items.groupByProviders.map((item, index) => this._formatItem(item, index));
+        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay.map((item, index) => this._formatItem(item, index));
+        this.groupByStores = items.groupByStores.map((item, index) => this._formatItem(item, index));
+        this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item, index) => this._formatItem(item, index));
+
+        this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithDay);
+
+        this._chargeHeaderTable(dateStart, dateEnd, this.menuOptionDefaultSelected);
+      }, error: (err) => {
+        this.toast.error({ message: err['kindMessage'] });
       }
     })
   }
@@ -177,114 +247,54 @@ export class ForProvidersComponent implements OnInit {
     })
   }
 
-  getTimeZone() {
-    var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
-    return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
-  }
-
-  forProvidersByStores(dateStartEpoch: Number, dateEndEpoch: Number) {
-    let dateStartControlValue = this.form.controls.dateStart.value;
-    let dateEndControlValue = this.form.controls.dateEnd.value;
-    let headers = this.addHeaders();
-
-    if (dateStartEpoch && dateEndEpoch) {
-      headers.push({ key: 'date_start', val: dateStartEpoch.toString() });
-      headers.push({ key: 'date_end', val: dateEndEpoch.toString() });
-    } else {
-      headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
-      headers.push({ key: 'date_end', val: new Date(dateEndControlValue).getTime().toString() });
-    }
-
-    let dateStart = new Date(dateStartControlValue);
-    let dateEnd = new Date(dateEndControlValue);
-
-    this.reportService.reports({ headers: headers }).subscribe({
+  getProviders() {
+    return this.reportService.providers({ headers: [] }).subscribe({
       next: (result) => {
-        let items: any = Object.assign({}, result.data.items)
-        this.groupByStoresAndProviders = items.groupByProvidersAndStores;
-        this.groupByStoresAndProvidersDayByDay = items.groupByProvidersAndStoresDayByDay;
-        this.groupByProviders = items.groupByProviders;
-        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay;
-        this.groupByStores = items.groupByStores;
-        this.groupByStoresDayByDay = items.groupByStoresDayByDay;
-
-        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithDay);
-
-        this.chargeHeaderTable(dateStart, dateEnd, this.menuOptionDefaultSelected);
+        this.providers = result.data.items
       }, error: (err) => {
         this.toast.error({ message: err['kindMessage'] });
       }
     })
   }
 
-  private _formatItem(item: IReport, index: number) {
-    let providerId = parseInt(item.providerId);
-    let providerName = providerId ? this._getProvider(providerId) : item.providerId;
-    let coinInAmount = item.coinInAmount.toFixed(2);
-    let coinOutAmount = item.coinOutAmount.toFixed(2);
-    let netWin = item.netWin.toFixed(2);
-
-    item.providerId = providerName;
-    item.coinInAmount = parseFloat(coinInAmount);
-    item.coinOutAmount = parseFloat(coinOutAmount);
-    item.netWin = parseFloat(netWin);
-    item.txId = index + 1;
-
-    return item;
+  getStores() {
+    return this.reportService.stores({ headers: [] }).subscribe({
+      next: (result) => {
+        this.stores = result.data.items
+      }, error: (err) => {
+        this.toast.error({ message: err['kindMessage'] });
+      }
+    })
   }
 
-  private _getProvider(id: Number) {
-    switch (id) {
-      case 1:
-        return 'CT Gaming';
-      case 2:
-        return 'Inbet Original';
-      case 3:
-        return 'Inbet Replica';
-      case 4:
-        return 'VIVO Gaming';
-      case 5:
-        return 'Slots Gold';
-    }
+  storeSelected(option: String) {
+    this.storeId = this.stores.find(i => i.name == option).storeId;
   }
 
-  private _filterStores(value: String) {
-    let headers = []
-    const filterValue = value.toLowerCase();
-
-    return this.reportService.stores({ headers: headers }).pipe(
-      map(response => response.data.items.filter(option => option.name.toLowerCase().includes(filterValue)))
-    )
+  providerSelected(option: String) {
+    this.providerId = this.providers.find(i => i.name == option).providerId;
   }
 
-  private _filterProviders(value: String) {
-    let headers = []
-    const filterValue = value.toLowerCase();
-
-    return this.reportService.providers({ headers: headers }).pipe(
-      map(response => response.data.items.filter(option => option.name.toLowerCase().includes(filterValue)))
-    )
-  }
 
   groupBy(option: any) {
     switch (option.key) {
       case 'stores-providers':
-        this.chargeDataTable(this.groupByStoresAndProviders, [], this.columnsWithoutDay);
+        this._chargeDataTable(this.groupByStoresAndProviders, [], this.columnsWithoutDay);
         break;
       case 'stores-providers-day-by-day':
-        this.chargeDataTable(this.groupByStoresAndProvidersDayByDay, [], this.columnsWithDay);
+        this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, [], this.columnsWithDay);
         break;
       case 'providers':
-        this.chargeDataTable(this.groupByProviders, [], this.columnsWithoutDay);
+        this._chargeDataTable(this.groupByProviders, [], this.columnsWithoutDayForProviders);
         break;
       case 'providers-day-by-day':
-        this.chargeDataTable(this.groupByProvidersDayByDay, [], this.columnsWithDay);
+        this._chargeDataTable(this.groupByProvidersDayByDay, [], this.columnsWithDayForProviders);
         break;
       case 'stores':
-        this.chargeDataTable(this.groupByStores, [], this.columnsWithoutDay);
+        this._chargeDataTable(this.groupByStores, [], this.columnsWithoutDayForStores);
         break;
       case 'stores-day-by-day':
-        this.chargeDataTable(this.groupByStoresDayByDay, [], this.columnsWithDay);
+        this._chargeDataTable(this.groupByStoresDayByDay, [], this.columnsWithDayForStores);
         break;
       default:
         this.toast.error({ message: 'Not option selected' });
@@ -292,13 +302,60 @@ export class ForProvidersComponent implements OnInit {
     }
   }
 
-  addHeaders() {
+  private _chargeDataTable(items: IReport[], filtersAllowed: any, columnsSelected: any) {
+    this.tableMultifilter.chooseColumns(columnsSelected);
+    this.tableMultifilter.chargeDataTable({
+      rows: items,
+      filters: filtersAllowed
+    });
+  }
+
+
+  private _formatItem(item: IReport, index: number) {
+    if (item.providerId) {
+      let providerId = item.providerId
+      let providerName = this._getProvider(providerId);
+      item.providerId = providerName;
+    }
+
+    if (item.storeId) {
+      let storeId = item.storeId;
+      let storeName = this._getStores(storeId);
+      item.storeId = storeName;
+    }
+
+    item.txId = index + 1;
+
+    return item;
+  }
+
+  private _getProvider(id: String) {
+    return this.providers.find(i => i.providerId == id).name
+  }
+
+  private _getStores(id: String) {
+    return this.stores.find(i => i.storeId == id).name
+  }
+
+  private _filterStores(value: String): IStore[] {
+    const filterValue = value.toLowerCase();
+
+    return this.stores.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0)
+  }
+
+  private _filterProviders(value: String): IProvider[] {
+    const filterValue = value.toLowerCase();
+
+    return this.providers.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0)
+  }
+
+  private _addHeaders() {
     let headers = [];
-    let timezone = this.getTimeZone();
+    let timezone = this._getTimeZone();
     headers.push({ key: 'resource', val: 'providers' })
     headers.push({ key: 'timezone', val: timezone })
 
-    if (this.providerId != '' || this.storeId != '' || this.playerId != '') {
+    if (this.providerId || this.storeId || this.playerId) {
       headers.push({ key: 'provider_id', val: this.providerId });
       headers.push({ key: 'store_id', val: this.storeId });
       headers.push({ key: 'player_id', val: this.playerId })
@@ -307,30 +364,33 @@ export class ForProvidersComponent implements OnInit {
     return headers;
   }
 
-  chargeDataTable(items: IReport[], filtersAllowed: any, columnsSelected: any) {
-    this.tableMultifilter.chooseColumns(columnsSelected);
-    this.tableMultifilter.chargeDataTable({
-      rows: items.map((i, index) => this._formatItem(i, index)),
-      filters: filtersAllowed
-    });
+  _getTimeZone() {
+    var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
+    return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
   }
 
-  chargeHeaderTable(dateStart: Date, dateEnd: Date, option: String) {
+  _chargeHeaderTable(dateStart: Date, dateEnd: Date, option: String) {
+    let dateStartString = this._convertDateToStringWithFormat(dateStart)
+    let dateEndString = this._convertDateToStringWithFormat(dateEnd)
+
     this.tableMultifilter.menuGroups = this.menuGroupOptions;
     this.tableMultifilter.menuOptionDefaultSelected = option;
+    this.tableMultifilter.numberDaysReport = dateStartString == dateEndString ? 1 : new Date(dateEnd.getTime() - dateStart.getTime()).getDate();
+    this.tableMultifilter.dateStart = dateStartString;
+    this.tableMultifilter.dateEnd = dateEndString;
 
-    if (`${dateStart.getFullYear()}-${('0' + (dateStart.getMonth() + 1)).slice(-2)}-${('0' + dateStart.getDate()).slice(-2)}` == `${dateEnd.getFullYear()}-${('0' + (dateEnd.getMonth() + 1)).slice(-2)}-${('0' + dateEnd.getDate()).slice(-2)}`) {
-      this.tableMultifilter.numberDaysReport = 1;
-    } else {
-      this.tableMultifilter.numberDaysReport = new Date(dateEnd.getTime() - dateStart.getTime()).getDate();
-    }
-    this.tableMultifilter.dateStart = `${dateStart.getFullYear()}-${('0' + (dateStart.getMonth() + 1)).slice(-2)}-${('0' + dateStart.getDate()).slice(-2)}`;
-    this.tableMultifilter.dateEnd = `${dateEnd.getFullYear()}-${('0' + (dateEnd.getMonth() + 1)).slice(-2)}-${('0' + dateEnd.getDate()).slice(-2)}`;
     if (this.providerId || this.playerId || this.storeId) {
-      this.tableMultifilter.provider = this._getProvider(+this.providerId);
+      this.tableMultifilter.provider = this._getProvider(this.providerId);
       this.tableMultifilter.player = this.playerControl.value;
       this.tableMultifilter.game = this.storeId;
     }
+  }
+
+  _convertDateToStringWithFormat(date: Date) {
+    let month = ('0' + (date.getMonth() + 1)).slice(-2)
+    let day = ('0' + date.getDate()).slice(-2)
+
+    return `${date.getFullYear()}-${month}-${day}`
   }
 
   openPanel(): void {

@@ -5,7 +5,7 @@ export interface IReport {
   playerId?: String;
   games?: String;
   players?: Number;
-  providerId?: string;
+  providerId?: String;
   providers?: Number;
   coinInCounter?: Number;
   coinInAmount?: Number;
