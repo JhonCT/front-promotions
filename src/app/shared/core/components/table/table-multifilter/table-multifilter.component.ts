@@ -7,7 +7,6 @@ import { ExportCsvService } from '../../../services/export-csv.service';
 import { IFilter } from '../multi-filter/multi-filter.interface';
 import { MultiFilterComponent } from '../multi-filter/multi-filter.component';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-table-multifilter',
@@ -44,6 +43,9 @@ export class TableMultifilterComponent implements OnInit {
   provider: String;
   player: String;
   game: String;
+  idColumn: String;
+  dayColumn: String;
+  totalString: String;
 
   @ViewChild(MatMenuTrigger) menu: MatMenuTrigger;
 
@@ -51,10 +53,8 @@ export class TableMultifilterComponent implements OnInit {
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-
   @ViewChild(MultiFilterComponent)
   multifilter: MultiFilterComponent;
-
 
   @Output() clicBtn = new EventEmitter();
   @Output() runFilter = new EventEmitter();
@@ -135,5 +135,29 @@ export class TableMultifilterComponent implements OnInit {
   handleGroupOption(menuOption) {
     this.menuOptionDefaultSelected = menuOption.val;
     this.onClickGroupOption.emit(menuOption);
+  }
+
+  getTotals(key: any) {
+    if (key == this.idColumn) {
+      return this.totalString;
+    }
+    if (key == this.dayColumn) {
+      return this.numberDaysReport;
+    }
+
+    let data = this.dataSource.filteredData.map(t => t[key]);
+
+    let result = data.map(i => parseFloat(i)).reduce((acc, value) => acc + value, 0);
+
+    let response: any;
+
+    if (result) {
+      response = result.toString().includes('.') ? result.toFixed(2) : result;
+    } else {
+      let counter = new Set(data);
+      response = counter.size;
+    }
+
+    return response;
   }
 }
