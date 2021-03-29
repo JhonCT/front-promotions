@@ -6,4 +6,5 @@ export enum ApiNames {
   players = 'PLAYERS_API_URL',
   wallet = 'WALLET_API_URL',
   reports = 'REPORT_API_URL',
+  promotions = 'PROMOTIONS_API_URL',
 }
