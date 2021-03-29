@@ -66,6 +66,7 @@ export class ForProvidersComponent implements OnInit {
   providerId: String = '';
   storeId: String = '';
   playerId: String = '';
+  maxDate = new Date();
 
   config = ReportForProvidersTableConfig;
 
@@ -202,13 +203,15 @@ export class ForProvidersComponent implements OnInit {
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
         let items: any = result.data.items;
+        console.log(items.groupByStores.sort((a, b) => ('' + a.storeId).localeCompare(b.storeId)));
 
-        this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item: any, index: any) => this._formatItem(item, index));
-        this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
-        this.groupByProviders = items.groupByProviders.map((item: any, index: any) => this._formatItem(item, index));
-        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
-        this.groupByStores = items.groupByStores.map((item: any, index: any) => this._formatItem(item, index));
-        this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
+        this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
+        this.groupByProviders = items.groupByProviders.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
+        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
+
+        this.groupByStores = items.groupByStores.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
+        this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
 
         this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithoutDay);
 

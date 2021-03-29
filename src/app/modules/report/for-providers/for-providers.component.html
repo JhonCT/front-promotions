@@ -14,7 +14,7 @@
 			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
 				<mat-label>Hasta</mat-label>
 				<input formControlName="dateEnd" autocomplete="off" class="cursor-pointer" readonly matInput
-					[matDatepicker]="pickerDateEnd" (click)="pickerDateEnd.open()" (focus)="pickerDateEnd.open()"
+					[matDatepicker]="pickerDateEnd" [max]="maxDate" (click)="pickerDateEnd.open()" (focus)="pickerDateEnd.open()"
 					placeholder="...">
 				<mat-datepicker-toggle matSuffix [for]="pickerDateEnd"></mat-datepicker-toggle>
 				<mat-datepicker #pickerDateEnd>
