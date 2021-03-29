@@ -77,7 +77,7 @@ export class ForProvidersComponent implements OnInit {
     { key: 'stores', val: 'Tiendas' },
     { key: 'stores-day-by-day', val: 'Tiendas - Diariamente' }
   ];
-  menuOptionDefaultSelected: String = 'Tiendas y Proveedores - Diariamente';
+  menuOptionDefaultSelected: String = 'Tiendas y Proveedores';
 
   groupByStoresAndProviders = []
   groupByStoresAndProvidersDayByDay = []
@@ -189,29 +189,15 @@ export class ForProvidersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let date = new Date();
-    let dateStartEpoch = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 1).getTime().toString();
-    let dateEndEpoch = this._convertDateToEpochFinal(date);
-    this.forProvidersByStores(dateStartEpoch, dateEndEpoch);
+    this.forProvidersByStores();
     this.getProviders();
     this.getStores();
   }
 
-  forProvidersByStores(dateStartEpoch: String, dateEndEpoch: String) {
+  forProvidersByStores() {
+    let headers = this._addHeaders();
     let dateStartControlValue = this.form.controls.dateStart.value;
     let dateEndControlValue = this.form.controls.dateEnd.value;
-    let headers = this._addHeaders();
-
-    if (dateStartEpoch && dateEndEpoch) {
-      headers.push({ key: 'date_start', val: dateStartEpoch });
-      headers.push({ key: 'date_end', val: dateEndEpoch });
-    } else {
-      headers.push({ key: 'date_start', val: new Date(dateStartControlValue).getTime().toString() });
-      headers.push({ key: 'date_end', val: this._convertDateToEpochFinal(new Date(dateEndControlValue)) });
-    }
-
-    let dateStart = new Date(dateStartControlValue);
-    let dateEnd = new Date(dateEndControlValue);
 
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
@@ -224,9 +210,9 @@ export class ForProvidersComponent implements OnInit {
         this.groupByStores = items.groupByStores.map((item, index) => this._formatItem(item, index));
         this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item, index) => this._formatItem(item, index));
 
-        this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithDay);
+        this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithoutDay);
 
-        this._chargeHeaderTable(dateStart, dateEnd, this.menuOptionDefaultSelected);
+        this._chargeHeaderTable(new Date(dateStartControlValue), new Date(dateEndControlValue), this.menuOptionDefaultSelected);
       }, error: (err) => {
         this.toast.error({ message: err['kindMessage'] });
       }
@@ -275,7 +261,6 @@ export class ForProvidersComponent implements OnInit {
     this.providerId = this.providers.find(i => i.name == option).providerId;
   }
 
-
   groupBy(option: any) {
     switch (option.key) {
       case 'stores-providers':
@@ -309,7 +294,6 @@ export class ForProvidersComponent implements OnInit {
       filters: filtersAllowed
     });
   }
-
 
   private _formatItem(item: IReport, index: number) {
     if (item.providerId) {
@@ -351,7 +335,12 @@ export class ForProvidersComponent implements OnInit {
 
   private _addHeaders() {
     let headers = [];
+    let dateStartControlValue = this.form.controls.dateStart.value;
+    let dateEndControlValue = this.form.controls.dateEnd.value;
     let timezone = this._getTimeZone();
+
+    headers.push({ key: 'date_start', val: this._convertDateToEpochInitial(new Date(dateStartControlValue)) });
+    headers.push({ key: 'date_end', val: this._convertDateToEpochFinal(new Date(dateEndControlValue)) });
     headers.push({ key: 'resource', val: 'providers' })
     headers.push({ key: 'timezone', val: timezone })
 
@@ -391,6 +380,10 @@ export class ForProvidersComponent implements OnInit {
     let day = ('0' + date.getDate()).slice(-2)
 
     return `${date.getFullYear()}-${month}-${day}`
+  }
+
+  _convertDateToEpochInitial(date: Date): String {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).getTime().toString();
   }
 
   _convertDateToEpochFinal(date: Date): String {
