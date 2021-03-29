@@ -26,31 +26,34 @@
 					[matAutocomplete]="store">
 				<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
 				<mat-autocomplete #store="matAutocomplete" (optionSelected)="storeSelected($event.option.value)">
-					<mat-option *ngFor="let option of filteredStoreOptions | async" [key]="option.name"
-						[value]="option.name">
+					<mat-option *ngFor="let option of stores" [key]="option.name" [value]="option.name">
 						{{option.name}}
 					</mat-option>
 				</mat-autocomplete>
 			</mat-form-field>
 			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
 				<mat-label>Proveedor</mat-label>
-				<input type="text" placeholder="Buscar proveedor" aria-label="Provider" matInput [formControl]="providerControl"
-					[matAutocomplete]="provider">
+				<input type="text" placeholder="Buscar proveedor" aria-label="Provider" matInput
+					[formControl]="providerControl" [matAutocomplete]="provider">
 				<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
 				<mat-autocomplete #provider="matAutocomplete" (optionSelected)="providerSelected($event.option.value)">
-					<mat-option *ngFor="let option of filteredProviderOptions | async" [value]="option.name">
+					<mat-option *ngFor="let option of providers" [value]="option.name">
 						{{option.name}}
 					</mat-option>
 				</mat-autocomplete>
 			</mat-form-field>
 			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
 				<mat-label>Player</mat-label>
-				<input type="text" placeholder="Buscar player" aria-label="Player" matInput [formControl]="playerControl"
-					(keyup.enter)="findCustomer()">
+				<input type="text" placeholder="Buscar player" aria-label="Player" matInput
+					[formControl]="playerControl" (keyup.enter)="findCustomer()">
 			</mat-form-field>
-			<div class="col-2 justify-content-center">
-				<button mat-raised-button color="primary" (click)="forProvidersByStores(null, null)"
-					[disabled]="!form.valid">
+			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
+				<mat-label>Juego</mat-label>
+				<input type="text" placeholder="Buscar juego" aria-label="Juego" matInput
+					[formControl]="playerControl">
+			</mat-form-field>
+			<div class="col-12 d-flex justify-content-end">
+				<button mat-raised-button color="primary" (click)="forProvidersByStores()" [disabled]="!form.valid">
 					BUSCAR
 				</button>
 			</div>

@@ -100,6 +100,19 @@ export class ForProvidersComponent implements OnInit {
     "netWin"
   ]
 
+  columnsWithoutDay = [
+    "txId",
+    "storeId",
+    "providerId",
+    "players",
+    "games",
+    "coinInCounter",
+    "coinInAmount",
+    "coinOutCounter",
+    "coinOutAmount",
+    "netWin"
+  ]
+
   columnsWithDayForProviders = [
     "txId",
     "day",
@@ -117,19 +130,6 @@ export class ForProvidersComponent implements OnInit {
     "txId",
     "day",
     "storeId",
-    "players",
-    "games",
-    "coinInCounter",
-    "coinInAmount",
-    "coinOutCounter",
-    "coinOutAmount",
-    "netWin"
-  ]
-
-  columnsWithoutDay = [
-    "txId",
-    "storeId",
-    "providerId",
     "players",
     "games",
     "coinInCounter",
@@ -201,14 +201,14 @@ export class ForProvidersComponent implements OnInit {
 
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
-        let items: any = result.data.items
+        let items: any = result.data.items;
 
-        this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item, index) => this._formatItem(item, index));
-        this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item, index) => this._formatItem(item, index));
-        this.groupByProviders = items.groupByProviders.map((item, index) => this._formatItem(item, index));
-        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay.map((item, index) => this._formatItem(item, index));
-        this.groupByStores = items.groupByStores.map((item, index) => this._formatItem(item, index));
-        this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item, index) => this._formatItem(item, index));
+        this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByProviders = items.groupByProviders.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStores = items.groupByStores.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item: any, index: any) => this._formatItem(item, index));
 
         this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithoutDay);
 
@@ -364,9 +364,12 @@ export class ForProvidersComponent implements OnInit {
 
     this.tableMultifilter.menuGroups = this.menuGroupOptions;
     this.tableMultifilter.menuOptionDefaultSelected = option;
-    this.tableMultifilter.numberDaysReport = dateStartString == dateEndString ? 1 : new Date(dateEnd.getTime() - dateStart.getTime()).getDate();
+    this.tableMultifilter.numberDaysReport = dateStartString == dateEndString ? 1 : new Date(dateEnd.getTime() - dateStart.getTime()).getDate() + 1;
     this.tableMultifilter.dateStart = dateStartString;
     this.tableMultifilter.dateEnd = dateEndString;
+    this.tableMultifilter.idColumn = 'txId';
+    this.tableMultifilter.dayColumn = 'day';
+    this.tableMultifilter.totalString = 'Totals';
 
     if (this.providerId || this.playerId || this.storeId) {
       this.tableMultifilter.provider = this._getProvider(this.providerId);
