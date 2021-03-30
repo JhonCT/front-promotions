@@ -14,6 +14,7 @@ import { IProvider, IReport, IStore } from '../report';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { importExpr } from '@angular/compiler/src/output/output_ast';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 const moment = _rollupMoment || _moment;
 
 export const MY_MOMENT_FORMATS = {
@@ -200,10 +201,11 @@ export class ForProvidersComponent implements OnInit {
     let dateStartControlValue = this.form.controls.dateStart.value;
     let dateEndControlValue = this.form.controls.dateEnd.value;
 
+    console.log(headers);
+
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
         let items: any = result.data.items;
-        console.log(items.groupByStores.sort((a, b) => ('' + a.storeId).localeCompare(b.storeId)));
 
         this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
         this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
@@ -257,11 +259,15 @@ export class ForProvidersComponent implements OnInit {
   }
 
   storeSelected(option: String) {
+    console.log(option)
     this.storeId = this.stores.find(i => i.name == option).storeId;
+    console.log(this.storeId)
   }
 
   providerSelected(option: String) {
+    console.log(option)
     this.providerId = this.providers.find(i => i.name == option).providerId;
+    console.log(this.providerId)
   }
 
   groupBy(option: any) {
@@ -347,10 +353,16 @@ export class ForProvidersComponent implements OnInit {
     headers.push({ key: 'resource', val: 'providers' })
     headers.push({ key: 'timezone', val: timezone })
 
-    if (this.providerId || this.storeId || this.playerId) {
-      headers.push({ key: 'provider_id', val: this.providerId });
-      headers.push({ key: 'store_id', val: this.storeId });
-      headers.push({ key: 'player_id', val: this.playerId })
+    if (this.providerId) {
+      headers.push({ key: 'provider_id', val: this.providerId.toString() });
+    }
+
+    if (this.storeId) {
+      headers.push({ key: 'store_id', val: this.storeId.toString() });
+    }
+
+    if (this.playerId) {
+      headers.push({ key: 'player_id', val: this.playerId.toString() })
     }
 
     return headers;

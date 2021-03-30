@@ -5,8 +5,8 @@
 			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
 				<mat-label>Desde</mat-label>
 				<input formControlName="dateStart" autocomplete="off" class="cursor-pointer" readonly matInput
-					[matDatepicker]="pickerDateStart" (click)="pickerDateStart.open()" (focus)="pickerDateStart.open()"
-					placeholder="...">
+					[matDatepicker]="pickerDateStart" [max]="maxDate" (click)="pickerDateStart.open()"
+					(focus)="pickerDateStart.open()" placeholder="...">
 				<mat-datepicker-toggle matSuffix [for]="pickerDateStart"></mat-datepicker-toggle>
 				<mat-datepicker #pickerDateStart>
 				</mat-datepicker>
@@ -14,8 +14,8 @@
 			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
 				<mat-label>Hasta</mat-label>
 				<input formControlName="dateEnd" autocomplete="off" class="cursor-pointer" readonly matInput
-					[matDatepicker]="pickerDateEnd" [max]="maxDate" (click)="pickerDateEnd.open()" (focus)="pickerDateEnd.open()"
-					placeholder="...">
+					[matDatepicker]="pickerDateEnd" [max]="maxDate" (click)="pickerDateEnd.open()"
+					(focus)="pickerDateEnd.open()" placeholder="...">
 				<mat-datepicker-toggle matSuffix [for]="pickerDateEnd"></mat-datepicker-toggle>
 				<mat-datepicker #pickerDateEnd>
 				</mat-datepicker>
@@ -42,17 +42,22 @@
 					</mat-option>
 				</mat-autocomplete>
 			</mat-form-field>
-			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
-				<mat-label>Player</mat-label>
-				<input type="text" placeholder="Buscar player" aria-label="Player" matInput
-					[formControl]="playerControl" (keyup.enter)="findCustomer()">
-			</mat-form-field>
-			<mat-form-field class="col-2" appearance="outline" floatLabel="always">
-				<mat-label>Juego</mat-label>
-				<input type="text" placeholder="Buscar juego" aria-label="Juego" matInput
-					[formControl]="playerControl">
-			</mat-form-field>
-			<div class="col-12 d-flex justify-content-end">
+
+		</div>
+		<div class="row">
+			<div class="col-8 row-control-custom">
+				<mat-form-field class="col-6" appearance="outline" floatLabel="always">
+					<mat-label>Player</mat-label>
+					<input type="text" placeholder="Buscar player" aria-label="Player" matInput
+						[formControl]="playerControl" (keyup.enter)="findCustomer()">
+				</mat-form-field>
+				<mat-form-field class="col-6" appearance="outline" floatLabel="always">
+					<mat-label>Juego</mat-label>
+					<input type="text" placeholder="Buscar juego" aria-label="Juego" matInput
+						[formControl]="playerControl">
+				</mat-form-field>
+			</div>
+			<div class="col-4">
 				<button mat-raised-button color="primary" (click)="forProvidersByStores()" [disabled]="!form.valid">
 					BUSCAR
 				</button>
