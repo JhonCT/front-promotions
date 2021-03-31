@@ -1,1 +1,45 @@
-<p>promotions works!</p>
+<app-title title="Promociones"></app-title>
+<!--<mat-card>
+    <form [formGroup]="form">
+        <div class="row">
+           <app-form-field-select class="col-4" appearance="outline" formControlName="storeId" label="Tienda"
+                [options]="stores" [display]="'name'" [key]="'storeId'" [error]="form.controls['storeId']">
+            </app-form-field-select>
+
+            <mat-form-field class="col-4" appearance="outline" floatLabel="always">
+                <mat-label>Desde</mat-label>
+                <input formControlName="dateStart" autocomplete="off" class="cursor-pointer" readonly matInput
+                    [matDatepicker]="pickerDateStart" (click)="pickerDateStart.open()" (focus)="pickerDateStart.open()"
+                    placeholder="...">
+                <mat-datepicker-toggle matSuffix [for]="pickerDateStart"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDateStart>
+                </mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="col-4" appearance="outline" floatLabel="always">
+                <mat-label>Hasta</mat-label>
+                <input formControlName="dateEnd" autocomplete="off" class="cursor-pointer" readonly matInput
+                    [matDatepicker]="pickerDateEnd" (click)="pickerDateEnd.open()" (focus)="pickerDateEnd.open()"
+                    placeholder="...">
+                <mat-datepicker-toggle matSuffix [for]="pickerDateEnd"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDateEnd>
+                </mat-datepicker>
+            </mat-form-field> 
+            <div class="col-12 d-flex justify-content-end">
+                <button mat-raised-button color="primary" (click)="onClickBuscar()" [disabled]="!form.valid">
+                    BUSCAR
+                </button>
+            </div>
+        </div>
+    </form>
+</mat-card>-->
+<br>
+<mat-card>
+    <app-table-multifilter [tableId]="config.dataTable.tableId" [columns]="config.dataTable.columns"
+        [pageSizeOptions]="config.dataTable.pageSizeOptions" [pageSize]="config.dataTable.pageSizeDefault"
+        [actions]="config.dataTable.actionColumn" [index]="config.dataTable.indexColumn" [filters]="[]"
+        [showFilters]="config.dataTable.showFilters" [showBtnReload]="config.dataTable.showBtnReload"
+        [showBtnDownload]="config.dataTable.showBtnDownload" [showBtnAdd]="config.dataTable.showBtnAdd"
+        [showChooseColumns]="config.dataTable.showChooseColumns" (newRegister)="newRegister($event)">
+    </app-table-multifilter>
+</mat-card>
