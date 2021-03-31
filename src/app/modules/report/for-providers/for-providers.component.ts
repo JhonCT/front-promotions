@@ -77,20 +77,22 @@ export class ForProvidersComponent implements OnInit {
   config = ReportForProvidersTableConfig;
 
   menuGroupOptions = [
-    { key: 'stores-providers', val: 'Tiendas y Proveedores' },
-    { key: 'stores-games', val: 'Tiendas y Juegos' },
-    { key: 'stores-players', val: 'Tiendas y Players' },
-    { key: 'stores-providers-day-by-day', val: 'Tiendas y Proveedores - Diariamente' },
-    { key: 'stores-games-day-by-day', val: 'Tiendas y Juegos - Diariamente' },
-    { key: 'stores-players-day-by-day', val: 'Tiendas y Players - Diariamente' },
     { key: 'providers', val: 'Proveedores' },
     { key: 'stores', val: 'Tiendas' },
     { key: 'games', val: 'Juegos' },
     { key: 'players', val: 'Players' },
+    { key: 'stores-providers', val: 'Tiendas y Proveedores' },
+    { key: 'players-providers', val: 'Players y Proveedores' },
+    { key: 'stores-games', val: 'Tiendas y Juegos' },
+    { key: 'stores-players', val: 'Tiendas y Players' },
     { key: 'providers-day-by-day', val: 'Proveedores - Diariamente' },
     { key: 'stores-day-by-day', val: 'Tiendas - Diariamente' },
     { key: 'games-day-by-day', val: 'Juegos - Diariamente' },
     { key: 'players-day-by-day', val: 'Players - Diariamente' },
+    { key: 'stores-providers-day-by-day', val: 'Tiendas y Proveedores - Diariamente' },
+    { key: 'players-providers-day-by-day', val: 'Players y Proveedores - Diariamente' },
+    { key: 'stores-games-day-by-day', val: 'Tiendas y Juegos - Diariamente' },
+    { key: 'stores-players-day-by-day', val: 'Tiendas y Players - Diariamente' },
   ];
   menuOptionDefaultSelected: String = 'Tiendas y Proveedores';
 
@@ -108,6 +110,8 @@ export class ForProvidersComponent implements OnInit {
   groupByStoresAndPlayersDayByDay = []
   groupByStoresAndProviders = []
   groupByStoresAndProvidersDayByDay = []
+  groupByPlayersAndProviders = []
+  groupByPlayersAndProvidersDayByDay = []
 
   @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
 
@@ -167,6 +171,8 @@ export class ForProvidersComponent implements OnInit {
         this.groupByStoresAndPlayersDayByDay = items.groupByStoresAndPlayersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
         this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item: any, index: any) => this._formatItem(item, index));
         this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByPlayersAndProviders = items.groupByPlayersAndProviders.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByPlayersAndProvidersDayByDay = items.groupByPlayersAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
 
         this._chargeDataTable(this.groupByStoresAndProviders, result.filtersAllowed, this.config.dataTable.columnsForStoresAndProviders);
 
@@ -282,6 +288,12 @@ export class ForProvidersComponent implements OnInit {
         break;
       case 'players-day-by-day':
         this._chargeDataTable(this.groupByPlayersDayByDay, [], this.config.dataTable.columnsForPlayersDayByDay);
+        break;
+      case 'players-providers':
+        this._chargeDataTable(this.groupByPlayersAndProviders, [], this.config.dataTable.columnsForPlayersAndProviders);
+        break;
+      case 'players-providers-day-by-day':
+        this._chargeDataTable(this.groupByPlayersAndProvidersDayByDay, [], this.config.dataTable.columnsForPlayersAndProvidersDayByDay);
         break;
       default:
         this.toast.error({ message: 'Not option selected' });
