@@ -1,4 +1,4 @@
-<app-title title="Reporte de Eventos por Proveedores"></app-title>
+<app-title title="Reporte de Eventos - Agrupaciones"></app-title>
 <mat-card>
 	<form [formGroup]="form">
 		<div class="row">
@@ -42,7 +42,6 @@
 					</mat-option>
 				</mat-autocomplete>
 			</mat-form-field>
-
 		</div>
 		<div class="row">
 			<div class="col-8 row-control-custom">
@@ -54,12 +53,15 @@
 				<mat-form-field class="col-6" appearance="outline" floatLabel="always">
 					<mat-label>Juego</mat-label>
 					<input type="text" placeholder="Buscar juego" aria-label="Juego" matInput
-						[formControl]="playerControl">
+						[formControl]="gameControl" readonly (click)="openDialogGames()">
 				</mat-form-field>
 			</div>
 			<div class="col-4">
 				<button mat-raised-button color="primary" (click)="forProvidersByStores()" [disabled]="!form.valid">
 					BUSCAR
+				</button>
+				<button mat-icon-button color="primary" class="mx-1" (click)="exportToCsv()">
+					<mat-icon>get_app</mat-icon>
 				</button>
 			</div>
 		</div>
@@ -72,6 +74,8 @@
 		[actions]="config.dataTable.actionColumn" [index]="config.dataTable.indexColumn" [filters]="[]"
 		[showFilters]="config.dataTable.showFilters" [showBtnReload]="config.dataTable.showBtnReload"
 		[showBtnDownload]="config.dataTable.showBtnDownload" [showBtnAdd]="config.dataTable.showBtnAdd"
-		[showChooseColumns]="config.dataTable.showChooseColumns" (onClickGroupOption)="groupBy($event)">
+		[showChooseColumns]="config.dataTable.showChooseColumns"
+		[showGroupByOptions]="config.dataTable.showGroupByOptions" [showTotals]="config.dataTable.showTotals"
+		(onClickGroupOption)="groupBy($event)">
 	</app-table-multifilter>
 </mat-card>

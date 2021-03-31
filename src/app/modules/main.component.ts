@@ -23,11 +23,11 @@ export class MainComponent implements OnInit {
     private mainSvc: MainService,
     private sessionSvc: SessionService,
     private lsSVc: LocalStorageService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const session = this.sessionSvc.getSession();
-    if(!session) {
+    if (!session) {
       this.sessionSvc.clearSession();
     }
     // const menu = this.lsSVc.getItem('XMnAUl', true);
@@ -53,7 +53,7 @@ export class MainComponent implements OnInit {
 
   refactorMenu(privileges) {
     let refactored = [];
-    for (const item of Object.entries<any>(privileges) ) {
+    for (const item of Object.entries<any>(privileges)) {
       refactored.push({
         menuid: item[0],
         name: NAV.TITLE_GROUP[item[0]],
@@ -64,10 +64,7 @@ export class MainComponent implements OnInit {
   }
 
   menuPipeItem(item) {
-    if (item.group == 'REPORT') {
-      item.route = 'reports/' + item.route;
-    }
-    return { icon: item.icon, link: item.route, label: NAV.TITLE[ item.title.split('.')[1]] }
+    return { icon: item.icon, link: item.route, label: NAV.TITLE[item.title.split('.')[1]] }
   }
 
   menuGroupListOpenedChange(opened: boolean) {

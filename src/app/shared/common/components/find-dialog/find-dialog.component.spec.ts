@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForGamesComponent } from './for-games.component';
+import { FindDialogComponent } from './find-dialog.component';
 
-describe('ForGamesComponent', () => {
-  let component: ForGamesComponent;
-  let fixture: ComponentFixture<ForGamesComponent>;
+describe('FindDialogComponent', () => {
+  let component: FindDialogComponent;
+  let fixture: ComponentFixture<FindDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForGamesComponent ]
+      declarations: [ FindDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ForGamesComponent);
+    fixture = TestBed.createComponent(FindDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

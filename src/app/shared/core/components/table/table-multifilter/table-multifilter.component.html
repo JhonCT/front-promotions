@@ -2,13 +2,13 @@
 	<div class="table__headers">
 		<div class="table__headers__filter">
 			<div class="col-12 d-flex">
-				<div class="col-6 d-flex">
-					<h4>Agrupado por&nbsp;</h4>
+				<div class="col-6 d-flex" *ngIf="showGroupByOptions">
+					<h4 class="cursor-context-menu">Agrupado por&nbsp;</h4>
 					<h4 mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu"
-						class="primary-color">
+						class="primary-color cursor-pointer">
 						{{ menuOptionDefaultSelected }} ▼
 					</h4>
-					<mat-menu #menu="matMenu">
+					<mat-menu #menu="matMenu" >
 						<button mat-menu-item *ngFor="let menu of menuGroups" (click)="handleGroupOption(menu)">
 							<span>{{menu.val}}</span>
 						</button>
@@ -72,8 +72,14 @@
 				<th mat-header-cell *matHeaderCellDef [ngStyle]="{'text-align': item.align}"
 					[style.min-width.px]="item.width ? item.width : 120">{{ item.header }}</th>
 				<td mat-cell *matCellDef="let row" [ngStyle]="{'text-align': item.align}">{{ row[item.key] }}</td>
-				<td mat-footer-cell *matFooterCellDef class="primary-color" [style.min-width.px]="item.width ? item.width : 120"
-					[ngStyle]="{'text-align': item.align}"><b>{{ getTotals(item.key) }} </b></td>
+				<ng-container *ngIf="showTotals">
+					<td mat-footer-cell *matFooterCellDef class="primary-color"
+						[style.min-width.px]="item.width ? item.width : 120" [ngStyle]="{'text-align': item.align}">
+						<b>{{
+							getTotals(item.key) }} </b>
+					</td>
+				</ng-container>
+
 			</ng-container>
 			<ng-container matColumnDef="actions">
 				<th mat-header-cell *matHeaderCellDef> ACCIONES </th>
@@ -83,12 +89,15 @@
 							[matTooltipPosition]="'left'" *ngIf="action.show">
 							<mat-icon [ngStyle]="{'color': action.color }">{{ action.icon }}</mat-icon>
 						</button>
+
 					</ng-container>
 				</td>
 			</ng-container>
 			<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-			<tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+			<ng-container *ngIf="showTotals">
+				<tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>}
+			</ng-container>
 		</table>
 	</div>
 	<div class="table__footer">

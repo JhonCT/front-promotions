@@ -34,6 +34,8 @@ export class TableMultifilterComponent implements OnInit {
   @Input() showBtnAdd = false;
   @Input() showBtnReload = false;
   @Input() showChooseColumns = false;
+  @Input() showGroupByOptions = false;
+  @Input() showTotals = false;
 
   menuGroups: any;
   menuOptionDefaultSelected: String;
@@ -143,6 +145,9 @@ export class TableMultifilterComponent implements OnInit {
     }
     if (key == this.dayColumn) {
       return this.numberDaysReport;
+    }
+    if (this.player) {
+      return 1;
     }
 
     let data = this.dataSource.filteredData.map(t => t[key]);

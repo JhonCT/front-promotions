@@ -19,6 +19,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AtomsFormFieldModule } from '../../shared/core/components/atoms/atoms-form-field/atoms-form-field.module';
+import { FindDialogComponent } from './components/find-dialog/find-dialog.component';
+import { MatInputModule } from '@angular/material/input';
+import { CdkTableModule } from '@angular/cdk/table';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatRadioModule } from '@angular/material/radio';
 // const routerChildren: Routes = [];
 @NgModule({
   declarations: [
@@ -31,6 +37,7 @@ import { AtomsFormFieldModule } from '../../shared/core/components/atoms/atoms-f
     ConfirmLogoutComponent,
     ChangePasswordComponent,
     MoneyPipe,
+    FindDialogComponent,
   ],
   entryComponents: [
     ConfirmDialogComponent,
@@ -49,6 +56,11 @@ import { AtomsFormFieldModule } from '../../shared/core/components/atoms/atoms-f
     FormsModule,
     ReactiveFormsModule,
     AtomsFormFieldModule,
+    MatInputModule,
+    CdkTableModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatRadioModule,
     ToastrModule.forRoot({
       closeButton: true,
       maxOpened: 1,
@@ -59,4 +71,4 @@ import { AtomsFormFieldModule } from '../../shared/core/components/atoms/atoms-f
   ],
   exports: [TitleComponent, LogoComponent, RouterOutletTabComponent, MoneyPipe],
 })
-export class LocalCommonModule {}
+export class LocalCommonModule { }

@@ -15,6 +15,7 @@ const routes: Routes = [
       { path: 'store-managers', loadChildren: () => import('./modules/store-managers/store-managers.module').then(m => m.StoreManagersModule) },
       { path: 'players', loadChildren: () => import('./modules/players/players.module').then(m => m.PlayersModule) },
       { path: 'reports', loadChildren: () => import('./modules/report/report.module').then(m => m.InOutReportModule) },
+      { path: 'promotions', loadChildren: () => import('./modules/promotions/promotions.module').then(m => m.PromotionsModule) },
       { path: 'packages', loadChildren: () => import('./modules/packages/packages.module').then(m => m.PackagesModule) },
     ],
   },
