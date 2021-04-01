@@ -6,15 +6,16 @@ import * as _moment from 'moment';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { ReportForProvidersDayByDayTableConfig, ReportForProvidersTableConfig } from './for-providers.component.config';
+import { ReportForProvidersTableConfig } from './for-providers.table.config';
 import { ReportService } from '../report.service';
 import { TableMultifilterComponent } from 'app/shared/core/components/table/table-multifilter/table-multifilter.component';
 import { ToasterService } from 'app/shared/core/services/toaster.service';
-import { IProvider, IReport, IStore } from '../report';
+import { IGame, IPlayer, IProvider, IReport, IStore } from '../report';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-import { importExpr } from '@angular/compiler/src/output/output_ast';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { MatDialog } from '@angular/material/dialog';
+import { FindDialogComponent } from 'app/shared/common/components/find-dialog/find-dialog.component';
+import { ExportCsvService } from 'app/shared/core/services/export-csv.service';
 const moment = _rollupMoment || _moment;
 
 export const MY_MOMENT_FORMATS = {
@@ -59,111 +60,58 @@ export class ForProvidersComponent implements OnInit {
   form: FormGroup;
   providers: IProvider[] = []
   stores: IStore[] = []
+  players: IPlayer[] = []
+  games: IGame[] = []
   filteredStoreOptions: Observable<IStore[]>;
   filteredProviderOptions: Observable<IProvider[]>;
   storeControl = new FormControl();
   providerControl = new FormControl();
   playerControl = new FormControl();
+  gameControl = new FormControl();
   providerId: String = '';
   storeId: String = '';
   playerId: String = '';
+  gameId: String = '';
   maxDate = new Date();
 
   config = ReportForProvidersTableConfig;
 
   menuGroupOptions = [
-    { key: 'stores-providers', val: 'Tiendas y Proveedores' },
-    { key: 'stores-providers-day-by-day', val: 'Tiendas y Proveedores - Diariamente' },
     { key: 'providers', val: 'Proveedores' },
-    { key: 'providers-day-by-day', val: 'Proveedores - Diariamente' },
     { key: 'stores', val: 'Tiendas' },
-    { key: 'stores-day-by-day', val: 'Tiendas - Diariamente' }
+    { key: 'games', val: 'Juegos' },
+    { key: 'players', val: 'Players' },
+    { key: 'stores-providers', val: 'Tiendas y Proveedores' },
+    { key: 'players-providers', val: 'Players y Proveedores' },
+    { key: 'stores-games', val: 'Tiendas y Juegos' },
+    { key: 'stores-players', val: 'Tiendas y Players' },
+    { key: 'providers-day-by-day', val: 'Proveedores - Diariamente' },
+    { key: 'stores-day-by-day', val: 'Tiendas - Diariamente' },
+    { key: 'games-day-by-day', val: 'Juegos - Diariamente' },
+    { key: 'players-day-by-day', val: 'Players - Diariamente' },
+    { key: 'stores-providers-day-by-day', val: 'Tiendas y Proveedores - Diariamente' },
+    { key: 'players-providers-day-by-day', val: 'Players y Proveedores - Diariamente' },
+    { key: 'stores-games-day-by-day', val: 'Tiendas y Juegos - Diariamente' },
+    { key: 'stores-players-day-by-day', val: 'Tiendas y Players - Diariamente' },
   ];
   menuOptionDefaultSelected: String = 'Tiendas y Proveedores';
 
-  groupByStoresAndProviders = []
-  groupByStoresAndProvidersDayByDay = []
+  groupByGames = []
+  groupByGamesDayByDay = []
+  groupByPlayers = []
+  groupByPlayersDayByDay = []
   groupByProviders = []
   groupByProvidersDayByDay = []
   groupByStores = []
   groupByStoresDayByDay = []
-
-  columnsWithDay = [
-    "txId",
-    "day",
-    "storeId",
-    "providerId",
-    "players",
-    "games",
-    "coinInCounter",
-    "coinInAmount",
-    "coinOutCounter",
-    "coinOutAmount",
-    "netWin"
-  ]
-
-  columnsWithoutDay = [
-    "txId",
-    "storeId",
-    "providerId",
-    "players",
-    "games",
-    "coinInCounter",
-    "coinInAmount",
-    "coinOutCounter",
-    "coinOutAmount",
-    "netWin"
-  ]
-
-  columnsWithDayForProviders = [
-    "txId",
-    "day",
-    "providerId",
-    "players",
-    "games",
-    "coinInCounter",
-    "coinInAmount",
-    "coinOutCounter",
-    "coinOutAmount",
-    "netWin"
-  ]
-
-  columnsWithDayForStores = [
-    "txId",
-    "day",
-    "storeId",
-    "players",
-    "games",
-    "coinInCounter",
-    "coinInAmount",
-    "coinOutCounter",
-    "coinOutAmount",
-    "netWin"
-  ]
-
-  columnsWithoutDayForProviders = [
-    "txId",
-    "providerId",
-    "players",
-    "games",
-    "coinInCounter",
-    "coinInAmount",
-    "coinOutCounter",
-    "coinOutAmount",
-    "netWin"
-  ]
-
-  columnsWithoutDayForStores = [
-    "txId",
-    "storeId",
-    "players",
-    "games",
-    "coinInCounter",
-    "coinInAmount",
-    "coinOutCounter",
-    "coinOutAmount",
-    "netWin"
-  ]
+  groupByStoresAndGames = []
+  groupByStoresAndGamesDayByDay = []
+  groupByStoresAndPlayers = []
+  groupByStoresAndPlayersDayByDay = []
+  groupByStoresAndProviders = []
+  groupByStoresAndProvidersDayByDay = []
+  groupByPlayersAndProviders = []
+  groupByPlayersAndProvidersDayByDay = []
 
   @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
 
@@ -171,7 +119,9 @@ export class ForProvidersComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private reportService: ReportService,
-    private toast: ToasterService
+    private toast: ToasterService,
+    public dialog: MatDialog,
+    private eCvsSvc: ExportCsvService
   ) {
     this.form = this.createForm({});
 
@@ -194,6 +144,8 @@ export class ForProvidersComponent implements OnInit {
     this.forProvidersByStores();
     this.getProviders();
     this.getStores();
+    this.getGames();
+    this.getPlayers();
   }
 
   forProvidersByStores() {
@@ -201,21 +153,28 @@ export class ForProvidersComponent implements OnInit {
     let dateStartControlValue = this.form.controls.dateStart.value;
     let dateEndControlValue = this.form.controls.dateEnd.value;
 
-    console.log(headers);
-
     this.reportService.reports({ headers: headers }).subscribe({
       next: (result) => {
         let items: any = result.data.items;
 
-        this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
-        this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
-        this.groupByProviders = items.groupByProviders.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
-        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
+        this.groupByGames = items.groupByGames.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByGamesDayByDay = items.groupByGamesDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByPlayers = items.groupByPlayers.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByPlayersDayByDay = items.groupByPlayersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByProviders = items.groupByProviders.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByProvidersDayByDay = items.groupByProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStores = items.groupByStores.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndGames = items.groupByStoresAndGames.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndGamesDayByDay = items.groupByStoresAndGamesDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndPlayers = items.groupByStoresAndPlayers.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndPlayersDayByDay = items.groupByStoresAndPlayersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndProviders = items.groupByStoresAndProviders.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByStoresAndProvidersDayByDay = items.groupByStoresAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByPlayersAndProviders = items.groupByPlayersAndProviders.map((item: any, index: any) => this._formatItem(item, index));
+        this.groupByPlayersAndProvidersDayByDay = items.groupByPlayersAndProvidersDayByDay.map((item: any, index: any) => this._formatItem(item, index));
 
-        this.groupByStores = items.groupByStores.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
-        this.groupByStoresDayByDay = items.groupByStoresDayByDay.map((item: any, index: any) => this._formatItem(item, index)).sort((a, b) => ('' + a.storeId).localeCompare(b.storeId));
-
-        this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, result.filtersAllowed, this.columnsWithoutDay);
+        this._chargeDataTable(this.groupByStoresAndProviders, result.filtersAllowed, this.config.dataTable.columnsForStoresAndProviders);
 
         this._chargeHeaderTable(new Date(dateStartControlValue), new Date(dateEndControlValue), this.menuOptionDefaultSelected);
       }, error: (err) => {
@@ -258,37 +217,83 @@ export class ForProvidersComponent implements OnInit {
     })
   }
 
+  getPlayers() {
+    return this.reportService.players({ headers: [] }).subscribe({
+      next: (result) => {
+        this.players = result.data.items
+      }, error: (err) => {
+        this.toast.error({ message: err['kindMessage'] })
+      }
+    })
+  }
+
+  getGames() {
+    return this.reportService.games({ headers: [] }).subscribe({
+      next: (result) => {
+        this.games = result.data.items
+      }, error: (err) => {
+        this.toast.error({ message: err['kindMessage'] })
+      }
+    })
+  }
+
   storeSelected(option: String) {
-    console.log(option)
     this.storeId = this.stores.find(i => i.name == option).storeId;
-    console.log(this.storeId)
   }
 
   providerSelected(option: String) {
-    console.log(option)
     this.providerId = this.providers.find(i => i.name == option).providerId;
-    console.log(this.providerId)
   }
 
   groupBy(option: any) {
     switch (option.key) {
       case 'stores-providers':
-        this._chargeDataTable(this.groupByStoresAndProviders, [], this.columnsWithoutDay);
+        this._chargeDataTable(this.groupByStoresAndProviders, [], this.config.dataTable.columnsForStoresAndProviders);
+        break;
+      case 'stores-games':
+        this._chargeDataTable(this.groupByStoresAndGames, [], this.config.dataTable.columnsForStoresAndGames);
+        break;
+      case 'stores-players':
+        this._chargeDataTable(this.groupByStoresAndPlayers, [], this.config.dataTable.columnsForStoresAndPlayers);
         break;
       case 'stores-providers-day-by-day':
-        this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, [], this.columnsWithDay);
+        this._chargeDataTable(this.groupByStoresAndProvidersDayByDay, [], this.config.dataTable.columnsForStoresAndProvidersDayByDay);
+        break;
+      case 'stores-games-day-by-day':
+        this._chargeDataTable(this.groupByStoresAndGamesDayByDay, [], this.config.dataTable.columnsForStoresAndGamesDayByDay);
+        break;
+      case 'stores-players-day-by-day':
+        this._chargeDataTable(this.groupByStoresAndPlayersDayByDay, [], this.config.dataTable.columnsForStoresAndPlayersDayByDay);
         break;
       case 'providers':
-        this._chargeDataTable(this.groupByProviders, [], this.columnsWithoutDayForProviders);
-        break;
-      case 'providers-day-by-day':
-        this._chargeDataTable(this.groupByProvidersDayByDay, [], this.columnsWithDayForProviders);
+        this._chargeDataTable(this.groupByProviders, [], this.config.dataTable.columnsForProviders);
         break;
       case 'stores':
-        this._chargeDataTable(this.groupByStores, [], this.columnsWithoutDayForStores);
+        this._chargeDataTable(this.groupByStores, [], this.config.dataTable.columnsForStores);
+        break;
+      case 'games':
+        this._chargeDataTable(this.groupByGames, [], this.config.dataTable.columnsForGames);
+        break;
+      case 'players':
+        this._chargeDataTable(this.groupByPlayers, [], this.config.dataTable.columnsForPlayers);
+        break;
+      case 'providers-day-by-day':
+        this._chargeDataTable(this.groupByProvidersDayByDay, [], this.config.dataTable.columnsForProvidersDayByDay);
         break;
       case 'stores-day-by-day':
-        this._chargeDataTable(this.groupByStoresDayByDay, [], this.columnsWithDayForStores);
+        this._chargeDataTable(this.groupByStoresDayByDay, [], this.config.dataTable.columnsForStoresDayByDay);
+        break;
+      case 'games-day-by-day':
+        this._chargeDataTable(this.groupByGamesDayByDay, [], this.config.dataTable.columnsForGamesDayByDay);
+        break;
+      case 'players-day-by-day':
+        this._chargeDataTable(this.groupByPlayersDayByDay, [], this.config.dataTable.columnsForPlayersDayByDay);
+        break;
+      case 'players-providers':
+        this._chargeDataTable(this.groupByPlayersAndProviders, [], this.config.dataTable.columnsForPlayersAndProviders);
+        break;
+      case 'players-providers-day-by-day':
+        this._chargeDataTable(this.groupByPlayersAndProvidersDayByDay, [], this.config.dataTable.columnsForPlayersAndProvidersDayByDay);
         break;
       default:
         this.toast.error({ message: 'Not option selected' });
@@ -297,7 +302,7 @@ export class ForProvidersComponent implements OnInit {
   }
 
   private _chargeDataTable(items: IReport[], filtersAllowed: any, columnsSelected: any) {
-    this.tableMultifilter.chooseColumns(columnsSelected);
+    this.tableMultifilter.chooseColumns(columnsSelected.map(i => i.key));
     this.tableMultifilter.chargeDataTable({
       rows: items,
       filters: filtersAllowed
@@ -317,17 +322,45 @@ export class ForProvidersComponent implements OnInit {
       item.storeId = storeName;
     }
 
+    if (item.gameId) {
+      let gameId = item.gameId;
+      let gameName = this._getGames(gameId);
+      item.gameId = gameName ?? gameId;
+    }
+
+    if (item.playerId) {
+      let playerId = item.playerId;
+      let playerName = this._getPlayers(playerId);
+      item.playerId = playerName;
+    }
+
     item.txId = index + 1;
 
     return item;
   }
 
   private _getProvider(id: String) {
-    return this.providers.find(i => i.providerId == id).name
+    let result = this.providers.find(i => i.providerId == id)
+    if (result) return result.name
+    return id
   }
 
   private _getStores(id: String) {
-    return this.stores.find(i => i.storeId == id).name
+    let result = this.stores.find(i => i.storeId == id)
+    if (result) return result.name
+    return id
+  }
+
+  private _getGames(id: String) {
+    let result = this.games.find(i => i.gameId == id)
+    if (result) return result.nameBack
+    return id
+  }
+
+  private _getPlayers(id: String) {
+    let result = this.players.find(i => i.playerId == id)
+    if (result) return result.username
+    return id;
   }
 
   private _filterStores(value: String): IStore[] {
@@ -361,8 +394,12 @@ export class ForProvidersComponent implements OnInit {
       headers.push({ key: 'store_id', val: this.storeId.toString() });
     }
 
-    if (this.playerId) {
-      headers.push({ key: 'player_id', val: this.playerId.toString() })
+    if (this.playerId && this.playerControl.value != '') {
+      headers.push({ key: 'player_id', val: this.playerId.toString() });
+    }
+
+    if (this.openDialogGames) {
+      headers.push({ key: 'game_id', val: this.gameId.toString() });
     }
 
     return headers;
@@ -410,6 +447,112 @@ export class ForProvidersComponent implements OnInit {
 
   openPanel(): void {
     this.autoTrigger.openPanel();
+  }
+
+  openDialogGames(): void {
+    const dialogRef = this.dialog.open(FindDialogComponent, {
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      height: '65%',
+      width: '65%',
+      data: { providers: this.providers, gameId: this.gameId },
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.gameId = result.gameId;
+        this.gameControl.setValue(result.nameBack);
+      }
+    })
+  }
+
+  exportToCsv(): void {
+    const data = [
+      {
+        name: "Group By Stores And Providers",
+        items: this.reorderAttrs(this.groupByStoresAndProviders, this.config.dataTable.columnsForStoresAndProviders),
+        columns: this.config.dataTable.columnsForStoresAndProviders.map(i => i.header)
+      },
+      {
+        name: "Group By Stores And Games",
+        items: this.reorderAttrs(this.groupByStoresAndGames, this.config.dataTable.columnsForStoresAndGames),
+        columns: this.config.dataTable.columnsForStoresAndGames.map(i => i.header)
+      },
+      {
+        name: "Group By Stores And Players",
+        items: this.reorderAttrs(this.groupByStoresAndPlayers, this.config.dataTable.columnsForStoresAndPlayers),
+        columns: this.config.dataTable.columnsForStoresAndPlayers.map(i => i.header)
+      },
+      {
+        name: "Group By Stores And Providers Day By Day",
+        items: this.reorderAttrs(this.groupByStoresAndProvidersDayByDay, this.config.dataTable.columnsForStoresAndProvidersDayByDay),
+        columns: this.config.dataTable.columnsForStoresAndProvidersDayByDay.map(i => i.header)
+      },
+      {
+        name: "Group By Stores And Games Day By Day",
+        items: this.reorderAttrs(this.groupByStoresAndGamesDayByDay, this.config.dataTable.columnsForStoresAndGamesDayByDay),
+        columns: this.config.dataTable.columnsForStoresAndGamesDayByDay.map(i => i.header)
+      },
+      {
+        name: "Group By Stores And Players Day By Day",
+        items: this.reorderAttrs(this.groupByStoresAndPlayersDayByDay, this.config.dataTable.columnsForStoresAndPlayersDayByDay),
+        columns: this.config.dataTable.columnsForStoresAndPlayersDayByDay.map(i => i.header)
+      },
+      {
+        name: "Group By Providers",
+        items: this.reorderAttrs(this.groupByProviders, this.config.dataTable.columnsForProviders),
+        columns: this.config.dataTable.columnsForProviders.map(i => i.header)
+      },
+      {
+        name: "Group By Stores",
+        items: this.reorderAttrs(this.groupByStores, this.config.dataTable.columnsForStores),
+        columns: this.config.dataTable.columnsForStores.map(i => i.header)
+      },
+      {
+        name: "Group By Games",
+        items: this.reorderAttrs(this.groupByGames, this.config.dataTable.columnsForGames),
+        columns: this.config.dataTable.columnsForGames.map(i => i.header)
+      },
+      {
+        name: "Group By Players",
+        items: this.reorderAttrs(this.groupByPlayers, this.config.dataTable.columnsForPlayers),
+        columns: this.config.dataTable.columnsForPlayers.map(i => i.header)
+      },
+      {
+        name: "Group By Providers Day By Day",
+        items: this.reorderAttrs(this.groupByProvidersDayByDay, this.config.dataTable.columnsForProvidersDayByDay),
+        columns: this.config.dataTable.columnsForProvidersDayByDay.map(i => i.header)
+      },
+      {
+        name: "Group By Stores Day By Day",
+        items: this.reorderAttrs(this.groupByStoresDayByDay, this.config.dataTable.columnsForStoresDayByDay),
+        columns: this.config.dataTable.columnsForStoresDayByDay.map(i => i.header)
+      },
+      {
+        name: "Group By Games Day By Day",
+        items: this.reorderAttrs(this.groupByGamesDayByDay, this.config.dataTable.columnsForGamesDayByDay),
+        columns: this.config.dataTable.columnsForGamesDayByDay.map(i => i.header)
+      },
+      {
+        name: "Group By Players Day By Day",
+        items: this.reorderAttrs(this.groupByPlayersDayByDay, this.config.dataTable.columnsForPlayersDayByDay),
+        columns: this.config.dataTable.columnsForPlayersDayByDay.map(i => i.header)
+      },
+    ]
+
+    data.forEach(i => {
+      this.eCvsSvc.exportCsv(i.name, i.items, false, i.columns);
+    })
+  }
+
+  reorderAttrs(items: any, columns: any) {
+    return items.map((item: any) => {
+      let newItem = {};
+      columns.map((row: any) => {
+        newItem[row.key] = item[row.key];
+      })
+      return newItem;
+    })
   }
 
   createForm(model: any): FormGroup {

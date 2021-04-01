@@ -1,0 +1,101 @@
+<div class="container">
+    <div class="row animate__animated animate__fadeInUp">
+        <div class="col-12">
+            <form [formGroup]="form">
+                <mat-card>
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>
+                                {{
+                                pageType == "new"
+                                ? "Registrar "
+                                : "Actualizar "
+                                }}
+                                Promoción
+                            </h3>
+                        </div>
+
+                        <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="name"
+                            [type]="'text'" label="Nombre *" [error]="form.controls['name']">
+                        </app-form-field-input>
+
+                        <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="description"
+                            [type]="'text'" label="Description *" [error]="form.controls['description']">
+                        </app-form-field-input>
+
+                        <div class="col-12">
+                            <h4>Configuración del Bono</h4>
+                            <span layout="row">
+                                <hr flex />
+                            </span>
+                        </div>
+
+                        <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="bonus"
+                            [type]="'text'" label="Bono *" [error]="form.controls['bonus']">
+                        </app-form-field-input>
+
+                        <app-form-field-select class="col-6 col-md-6" appearance="outline" formControlName="typeId"
+                            label="Tipo de Bono" [options]="types" [display]="'text'" [key]="'id'"
+                            [error]="form.controls['typeId']"></app-form-field-select>
+
+                        <app-form-field-select class="col-6 col-md-6" appearance="outline" formControlName="limitType"
+                            label="Tipo de Límite" [options]="limitTypes" [display]="'text'" [key]="'id'"
+                            [error]="form.controls['limitType']"></app-form-field-select>
+
+                        <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="limitPayment"
+                            [type]="'text'" label="Límite de Pago *" [error]="form.controls['limitPayment']">
+                        </app-form-field-input>
+
+                        <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="releaser"
+                            placeholder="" [type]="'text'" label="Monto Liberador" [error]="form.controls['releaser']">
+                        </app-form-field-input>
+
+                        <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="life"
+                            [type]="'text'" label="Horas de Vida" [error]="form.controls['life']">
+                        </app-form-field-input>
+
+                        <div class="col-12">
+                            <h4>Cantidades para la obtención de promo</h4>
+                            <span layout="row">
+                                <hr flex />
+                            </span>
+                        </div>
+
+                        <app-form-field-input class="col-4 col-md-4" appearance="outline" formControlName="redeemsByIp"
+                            [type]="'text'" label="Por IP" [error]="form.controls['redeemsByIp']">
+                        </app-form-field-input>
+
+                        <app-form-field-input class="col-4 col-md-4" appearance="outline"
+                            formControlName="redeemsByPlayer" [type]="'text'" label="Por Player"
+                            [error]="form.controls['redeemsByPlayer']">
+                        </app-form-field-input>
+
+                        <app-form-field-input class="col-4 col-md-4" appearance="outline"
+                            formControlName="redeemsTotal" [type]="'text'" label="Total"
+                            [error]="form.controls['redeemsTotal']">
+                        </app-form-field-input>
+
+                        <div class="col-12">
+                            <div class="d-flex buttons-submit">
+                                <button (click)="handleCancel()" mat-stroked-button color="warn">
+                                    CANCELAR
+                                </button>
+                                <button (click)="
+										pageType == 'new'
+											? handleNewItem()
+											: handleUpdItem()
+									" #submit [disabled]="!form.valid" mat-raised-button color="primary">
+                                    {{
+                                    pageType == "new"
+                                    ? "REGISTRAR"
+                                    : "ACTUALIZAR"
+                                    }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </form>
+        </div>
+    </div>
+</div>

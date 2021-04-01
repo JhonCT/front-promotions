@@ -1,0 +1,10 @@
+.dialog-wrapper {
+    height: 100%;
+    position: relative;
+}
+
+:host ::ng-deep .mat-dialog-actions {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

@@ -4,6 +4,7 @@ export const NAV = {
     IAM: 'Seguridad',
     MAIN: 'Pagina principal',
     REPORT: 'Reportes',
+    PROMOTIONS: 'Promociones'
   },
   TITLE: {
     HOME: 'Home',
@@ -11,9 +12,9 @@ export const NAV = {
     USERS_STORES: 'Adm. de tiendas',
     PLAYERS: 'Players',
     MY_STORE_IN_OUT: 'Reporte in/out',
-    FOR_PROVIDERS: 'Reporte por Proveedores',
-    FOR_GAMES: 'Reporte por Juegos',
-    FOR_PLAYERS: 'Reporte por Players',
+    FOR_EVENTS: 'Reporte de Eventos',
     PACKAGES: 'Paquetes',
+    PROMOTIONS: 'Promociones',
+    TYPES: 'Tipos'
   }
 }

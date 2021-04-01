@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiNames } from 'app/config/apis.enum';
 import { HttpClientService } from 'app/shared/common/services/http-client.service';
-import { IProvider, IReport, IStore, ICustomer } from './report';
+import { IPlayer } from '../players/players.interface';
+import { IProvider, IReport, IStore, ICustomer, IGame } from './report';
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +77,24 @@ export class ReportService {
       urlOrPath: `/${this.SUBJECT}/customer`,
       headers,
       addCredentials: true
+    })
+  }
+
+  games({ headers = []}) {
+    return this.http.get<IGame>({
+      nameAPI: ApiNames.reports,
+      urlOrPath: `/${this.SUBJECT}/games`,
+      headers,
+      addCredentials: true,
+    })
+  }
+
+  players({ headers = []}) {
+    return this.http.get<IPlayer>({
+      nameAPI: ApiNames.reports,
+      urlOrPath: `/${this.SUBJECT}/players`,
+      headers,
+      addCredentials: true,
     })
   }
 }

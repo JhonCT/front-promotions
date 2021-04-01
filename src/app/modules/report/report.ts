@@ -3,6 +3,7 @@ export interface IReport {
   day?: String;
   storeId?: String;
   playerId?: String;
+  gameId?: String;
   games?: String;
   players?: Number;
   providerId?: String;
@@ -19,6 +20,7 @@ export class Report {
   day = '';
   storeId = '';
   playerId = '';
+  gameId = '';
   games = '';
   players = 0;
   providerId = '';
@@ -73,5 +75,35 @@ export class Customer {
 
   constructor(model?) {
     Object.assign(this, model)
+  }
+}
+
+export interface IGame {
+  gameId?: String;
+  nameBack?: String;
+  providerId?: String;
+}
+
+export class Game {
+  playerId = '';
+  nameBack = '';
+  providerId = '';
+
+  constructor(model?) {
+    Object.assign(this, model)
+  }
+}
+
+export interface IPlayer {
+  playerId?: string;
+  username?: string;
+}
+
+export class Player {
+  playerId = '';
+  username = '';
+
+  constructor(model?) {
+    Object.assign(this, model);
   }
 }
