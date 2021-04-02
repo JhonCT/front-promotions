@@ -6,10 +6,8 @@ import { PromotionsWriteComponent } from './promotions-write/promotions-write.co
 
 const routes: Routes = [
     { path: 'promotions', component: PromotionsComponent },
-    {
-        path: 'write/new',
-        component: PromotionsWriteComponent
-    },
+    { path: 'write/new', component: PromotionsWriteComponent },
+    { path: 'write/:id', component: PromotionsWriteComponent },
     { path: 'types', component: TypesComponent },
 ];
 
