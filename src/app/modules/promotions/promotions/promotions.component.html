@@ -40,6 +40,7 @@
         [actions]="config.dataTable.actionColumn" [index]="config.dataTable.indexColumn" [filters]="[]"
         [showFilters]="config.dataTable.showFilters" [showBtnReload]="config.dataTable.showBtnReload"
         [showBtnDownload]="config.dataTable.showBtnDownload" [showBtnAdd]="config.dataTable.showBtnAdd"
-        [showChooseColumns]="config.dataTable.showChooseColumns" (newRegister)="newRegister($event)">
+        [showChooseColumns]="config.dataTable.showChooseColumns" (newRegister)="newRegister($event)"
+        (clicBtn)="handleAction($event)">
     </app-table-multifilter>
 </mat-card>
