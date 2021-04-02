@@ -31,7 +31,7 @@
                         </div>
 
                         <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="bonus"
-                            [type]="'text'" label="Bono *" [error]="form.controls['bonus']">
+                            [type]="'number'" label="Bono *" [error]="form.controls['bonus']">
                         </app-form-field-input>
 
                         <app-form-field-select class="col-6 col-md-6" appearance="outline" formControlName="typeId"
@@ -43,15 +43,15 @@
                             [error]="form.controls['limitType']"></app-form-field-select>
 
                         <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="limitPayment"
-                            [type]="'text'" label="Límite de Pago *" [error]="form.controls['limitPayment']">
+                            [type]="'number'" label="Límite de Pago *" [error]="form.controls['limitPayment']">
                         </app-form-field-input>
 
                         <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="releaser"
-                            placeholder="" [type]="'text'" label="Monto Liberador" [error]="form.controls['releaser']">
+                            placeholder="" [type]="'number'" label="Monto Liberador" [error]="form.controls['releaser']">
                         </app-form-field-input>
 
                         <app-form-field-input class="col-6 col-md-6" appearance="outline" formControlName="life"
-                            [type]="'text'" label="Horas de Vida" [error]="form.controls['life']">
+                            [type]="'number'" label="Horas de Vida" [error]="form.controls['life']">
                         </app-form-field-input>
 
                         <div class="col-12">
@@ -62,17 +62,16 @@
                         </div>
 
                         <app-form-field-input class="col-4 col-md-4" appearance="outline" formControlName="redeemsByIp"
-                            [type]="'text'" label="Por IP" [error]="form.controls['redeemsByIp']">
+                            [type]="'number'" label="Por IP" [error]="form.controls['redeemsByIp']">
                         </app-form-field-input>
 
                         <app-form-field-input class="col-4 col-md-4" appearance="outline"
-                            formControlName="redeemsByPlayer" [type]="'text'" label="Por Player"
+                            formControlName="redeemsByPlayer" [type]="'number'" label="Por Player"
                             [error]="form.controls['redeemsByPlayer']">
                         </app-form-field-input>
 
-                        <app-form-field-input class="col-4 col-md-4" appearance="outline"
-                            formControlName="redeemsTotal" [type]="'text'" label="Total"
-                            [error]="form.controls['redeemsTotal']">
+                        <app-form-field-input class="col-4 col-md-4" appearance="outline" formControlName="redeemsTotal"
+                            [type]="'number'" label="Total" [error]="form.controls['redeemsTotal']">
                         </app-form-field-input>
 
                         <div class="col-12">
