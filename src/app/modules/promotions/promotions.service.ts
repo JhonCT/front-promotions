@@ -33,14 +33,19 @@ export class PromotionsService {
       headers,
       body,
       loadingOverlay: true,
-      addCredentials: true
+      addCredentials: true,
+      addApiKey: true,
     });
   }
 
   itemPromo({ id, headers = [] }) {
     return this.http.get<IPromotions>({
       nameAPI: ApiNames.promotions,
-      urlOrPath: `/${this.SUBJECT_PROMOS}/${id}`
+      urlOrPath: `/${this.SUBJECT_PROMOS}/${id}`,
+      headers,      
+      loadingOverlay: true,
+      addCredentials: true,
+      addApiKey: true,
     })
   }
 
@@ -51,7 +56,8 @@ export class PromotionsService {
       headers,
       body,
       loadingOverlay: true,
-      addCredentials: true
+      addCredentials: true,
+      addApiKey: true,
     })
   }
 
@@ -63,6 +69,7 @@ export class PromotionsService {
       body,
       loadingOverlay: true,
       addCredentials: true,
+      addApiKey: true,
     });
   }
 
@@ -74,6 +81,7 @@ export class PromotionsService {
       body,
       loadingOverlay: true,
       addCredentials: true,
+      addApiKey: true,
     });
   }
 
@@ -83,7 +91,8 @@ export class PromotionsService {
       urlOrPath: `/${this.SUBJECT_PROMOS}`,
       headers,
       loadingOverlay: true,
-      addCredentials: true
+      addCredentials: true,
+      addApiKey: true,
     });
   }
 
@@ -94,7 +103,8 @@ export class PromotionsService {
       headers,
       body,
       loadingOverlay: true,
-      addCredentials: true
+      addCredentials: true,
+      addApiKey: true,
     });
   }
 
@@ -112,7 +122,8 @@ export class PromotionsService {
       headers,
       body,
       loadingOverlay: true,
-      addCredentials: true
+      addCredentials: true,
+      addApiKey: true,
     })
   }
 
@@ -124,6 +135,7 @@ export class PromotionsService {
       body,
       loadingOverlay: true,
       addCredentials: true,
+      addApiKey: true,
     });
   }
 
@@ -135,6 +147,7 @@ export class PromotionsService {
       body,
       loadingOverlay: true,
       addCredentials: true,
+      addApiKey: true,
     });
   }
 
