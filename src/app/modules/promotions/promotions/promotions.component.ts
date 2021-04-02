@@ -1,62 +1,37 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { PromotionsTableConfig } from './promotions.table.config';
 import { PromotionsService } from '../promotions.service';
 import { MyValidator } from '@core/components/atoms/atoms-form-field/control-error/my-validator';
-import moment from 'moment';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { TableMultifilterComponent } from 'app/shared/core/components/table/table-multifilter/table-multifilter.component';
+import { ToasterService } from 'app/shared/core/services/toaster.service';
+import { IPromotions } from 'app/models/promotions.interface';
 
-export const MY_MOMENT_FORMATS = {
-  parseInput: 'YYYY-MM-DD HH:mm:ss',
-  fullPickerInput: 'YYYY-MM-DD HH:mm:ss',
-  datePickerInput: 'YYYY-MM-DD HH:mm:ss',
-  timePickerInput: 'hh:mm',
-  monthYearLabel: 'MMM YYYY',
-  dateA11yLabel: 'LL',
-  monthYearA11yLabel: 'MMMM YYYY'
-};
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'YYYY-MM-DD',
-  },
-  display: {
-    dateInput: 'YYYY-MM-DD',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 @Component({
   selector: 'app-promotions',
   templateUrl: './promotions.component.html',
   styleUrls: ['./promotions.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
-
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-  ]
 })
 export class PromotionsComponent implements OnInit {
 
   config = PromotionsTableConfig;
   form: FormGroup;
 
+  @ViewChild(TableMultifilterComponent)
+  tableMultifilter: TableMultifilterComponent;
+
   constructor(
     private formBuilder: FormBuilder,
     private promotionsService: PromotionsService,
     private router: Router,
+    private toast: ToasterService,
   ) { }
 
   ngOnInit(): void {
     this.form = this.createForm({});
-    // this.promotions();
+    this.promotions();
   }
 
   promotions() {
@@ -64,16 +39,39 @@ export class PromotionsComponent implements OnInit {
 
     this.promotionsService.itemsPromo({ headers }).subscribe({
       next: (result) => {
-        console.log(result);
+        result.data.items = result.data['Items'];
+        this.tableMultifilter.chargeDataTable({
+          rows: result.data.items.map((item: any, index: any) => this._formatItem(item, index)),
+          filters: result.filtersAllowed
+        })
       },
       error: (err) => {
-        console.log(err);
+        this.toast.error({ message: err['kindMessage'] });
       }
     })
   }
 
   newRegister(event: any): void {
     this.router.navigate([`/promotions/write/new`]);
+  }
+
+
+  handleAction(event): void {
+    const actions = Object.values(this.config.listActions());
+    const action = actions.find((item) => item.action === event.action);
+    this[action.function](event.row);
+  }
+
+  handleEdit(row: IPromotions) {
+    this.router.navigate([`/promotions/write/${row.promoId}`]);
+  }
+
+  handleActive() {
+    console.log('active');
+  }
+
+  handleDeactive() {
+    console.log('active');
   }
 
   createForm(model: any): FormGroup {
@@ -84,5 +82,22 @@ export class PromotionsComponent implements OnInit {
     });
   }
 
+  private _formatItem(item: any, index: number) {
+    let actions = this.config.listActions();
+    item['txId'] = index + 1;
+    item['actions'] = Object.values(actions);
+    item.limitType = this._getLimitType(item.limitType);
 
+    return item;
+  }
+
+  private _getLimitType(limitType: any) {
+    let limitTypes = [
+      { key: 'amn', val: 'Amount' },
+      { key: 'per', val: 'Percentage' }
+    ]
+
+    return limitTypes.find(i => i.key == limitType).val;
+  }
 }
+
